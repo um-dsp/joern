@@ -8,16 +8,16 @@ import io.joern.scanners._
 import io.shiftleft.codepropertygraph.generated.Operators
 import io.shiftleft.semanticcpg.language._
 
-object ShellExec extends QueryBundle {
+object CodeInjection extends QueryBundle {
 
   implicit val resolver: ICallResolver = NoResolve
 
   @q
-  def shellExec()(implicit context: EngineContext): Query =
+  def CodeInjection()(implicit context: EngineContext): Query =
     Query.make(
-      name = "php-command-exec",
+      name = "php-Code-injection",
       author = Crew.niko,
-      title = "Command exec: A parameter is used in an insecure command call.",
+      title = "Code Injection vulnerability.",
       description = """
           |An attacker controlled parameter is used in an insecure `shell-exec` call.
           |
@@ -30,7 +30,7 @@ object ShellExec extends QueryBundle {
         def source =
           cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST).*")
 
-        def sink = cpg.call.name("shell_exec|exec|system|mail|popen|expect_popen|passthru|pcntl_exec|proc_opend|backticks").argument
+        def sink = cpg.call.name("eval|include|require").argument
 
         sink.reachableBy(source).l
       }),
