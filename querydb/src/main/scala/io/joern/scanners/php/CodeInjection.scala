@@ -29,10 +29,13 @@ object CodeInjection extends QueryBundle {
         // are identifier (at the moment)
         def source =
           cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST).*")
+        // extracts all eval, include and require statements and check that their arguments 
+        // dynamically evaluated at runtime 
+        // eval('Heloo')  X
+        // eval ($code)   V
+        def sink = cpg.call.name("eval|include|require").argument.isIdentifier 
 
-        def sink = cpg.call.name("eval|include|require").argument
-
-        sink.reachableBy(source).l
+        sink.reachableBy(source).l 
       }),
       tags = List(QueryTags.remoteCodeExecution, QueryTags.default)
     )
