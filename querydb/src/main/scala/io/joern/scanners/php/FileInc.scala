@@ -8,20 +8,20 @@ import io.joern.scanners._
 import io.shiftleft.codepropertygraph.generated.Operators
 import io.shiftleft.semanticcpg.language._
 
-object SQLInjection extends QueryBundle {
+object CodeInjection extends QueryBundle {
 
   implicit val resolver: ICallResolver = NoResolve
 
   @q
-  def shellExec()(implicit context: EngineContext): Query =
+  def CodeInjection()(implicit context: EngineContext): Query =
     Query.make(
-      name = "php-sql-injection",
+      name = "php-file-inclusion",
       author = Crew.niko,
-      title = "SQL injection: A parameter is used in an insecure database API call.",
+      title = "File inclusion vulnerability.",
       description = """
-          |An attacker controlled parameter is used in an insecure database API call.
+          |An attacker controlled parameter is used in file inclusion command.
           |
-          |If the parameter is not validated and sanitized, this is a SQL injection.
+          |If the parameter is not validated and sanitized, this is a remote code execution.
           |""".stripMargin,
       score = 5,
       withStrRep({ cpg =>
@@ -29,10 +29,13 @@ object SQLInjection extends QueryBundle {
         // are identifier (at the moment)
         def source =
           cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST).*")
+        // extracts all eval, include and require statements and check that their arguments 
+        // dynamically evaluated at runtime 
+        // eval('Heloo')  X
+        // eval ($code)   V
+        def sink = cpg.call.code(".*(eval|include|require|include_once|require_once).*").argument 
 
-        def sink = cpg.call.code(".*(mysql_query|mysqli_query|pg_query|sqlite_query|query).*").filter(_.receiver.nonEmpty).argument
-
-        sink.reachableBy(source).l
+        sink.reachableBy(source).l 
       }),
       tags = List(QueryTags.remoteCodeExecution, QueryTags.default)
     )
