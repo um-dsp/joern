@@ -15,7 +15,7 @@ object SQLInjection extends QueryBundle {
   @q
   def shellExec()(implicit context: EngineContext): Query =
     Query.make(
-      name = "php-sql-injection",
+      name = "sql-injection",
       author = Crew.niko,
       title = "SQL injection: A parameter is used in an insecure database API call.",
       description = """

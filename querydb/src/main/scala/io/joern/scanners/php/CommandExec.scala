@@ -15,7 +15,7 @@ object ShellExec extends QueryBundle {
   @q
   def shellExec()(implicit context: EngineContext): Query =
     Query.make(
-      name = "php-command-exec",
+      name = "command-exec",
       author = Crew.niko,
       title = "Command exec: A parameter is used in an insecure command call.",
       description = """

@@ -15,7 +15,7 @@ object Xss extends QueryBundle {
   @q
   def Xss()(implicit context: EngineContext): Query =
     Query.make(
-      name = "php-xss",
+      name = "xss",
       author = Crew.niko,
       title = "Cross site scripting vulnerability.",
       description = """
@@ -30,7 +30,7 @@ object Xss extends QueryBundle {
         def source =
           cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST).*")
 
-        def sink = cpg.call.name("print|exec|printf").argument
+        def sink = cpg.call.name("print|echo|printf").argument
 
         sink.reachableBy(source).l
       }),

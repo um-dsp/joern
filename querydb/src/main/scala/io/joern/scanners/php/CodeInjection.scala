@@ -15,7 +15,7 @@ object CodeInjection extends QueryBundle {
   @q
   def CodeInjection()(implicit context: EngineContext): Query =
     Query.make(
-      name = "php-Code-injection",
+      name = "code-injection",
       author = Crew.niko,
       title = "Code Injection vulnerability.",
       description = """
@@ -33,7 +33,7 @@ object CodeInjection extends QueryBundle {
         // dynamically evaluated at runtime 
         // eval('Heloo')  X
         // eval ($code)   V
-        def sink = cpg.call.name("eval|include|require").argument.isIdentifier 
+        def sink = cpg.call.name("eval").argument.isIdentifier 
 
         sink.reachableBy(source).l 
       }),
