@@ -14,26 +14,77 @@ import overflowdb.BatchedUpdate.DiffGraphBuilder
 import overflowdb.traversal.Traversal
 
 import java.util.concurrent.RecursiveTask
+import java.util.concurrent.atomic.AtomicBoolean
+import scala.annotation.nowarn
+import scala.collection.concurrent.TrieMap
 import scala.collection.mutable
+
+/** @param iterations
+  *   the number of iterations to run.
+  * @param enabledDummyTypes
+  *   whether to enable placeholder dummy values for partially resolved types.
+  */
+case class XTypeRecoveryConfig(iterations: Int = 2, enabledDummyTypes: Boolean = true)
+
+/** @param config
+  *   the user defined config.
+  * @param currentIteration
+  *   the current iteration.
+  * @param isFieldCache
+  *   a cache for answering if a node represents a field or member.
+  * @param changesWereMade
+  *   a flag to indicate that changes were made in the last iteration.
+  * @param stopEarly
+  *   indicates that we may stop type propagation earlier than the specified number of iterations.
+  */
+case class XTypeRecoveryState(
+  config: XTypeRecoveryConfig = XTypeRecoveryConfig(),
+  currentIteration: Int = 0,
+  isFieldCache: TrieMap[Long, Boolean] = TrieMap.empty[Long, Boolean],
+  changesWereMade: AtomicBoolean = new AtomicBoolean(false),
+  stopEarly: AtomicBoolean
+) {
+  lazy val isFinalIteration: Boolean = currentIteration == config.iterations - 1
+
+  lazy val isFirstIteration: Boolean = currentIteration == 0
+
+  def clear(): Unit = isFieldCache.clear()
+
+}
 
 /** In order to propagate types across compilation units, but avoid the poor scalability of a fixed-point algorithm, the
   * number of iterations can be configured using the iterations parameter. Note that iterations < 2 will not provide any
   * interprocedural type recovery capabilities.
   * @param cpg
   *   the CPG to recovery types for.
-  * @param iterations
-  *   the number of iterations to run.
+  *
   * @tparam CompilationUnitType
   *   the AstNode type used to represent a compilation unit of the language.
   */
-abstract class XTypeRecoveryPass[CompilationUnitType <: AstNode](cpg: Cpg, iterations: Int = 2) extends CpgPass(cpg) {
+abstract class XTypeRecoveryPass[CompilationUnitType <: AstNode](
+  cpg: Cpg,
+  config: XTypeRecoveryConfig = XTypeRecoveryConfig()
+) extends CpgPass(cpg) {
 
-  // TODO: Determine if any changes are being made for early stopping. Min iterations will be 2.
-  override def run(builder: BatchedUpdate.DiffGraphBuilder): Unit =
-    for (i <- 0 until iterations)
-      generateRecoveryPass(i == iterations - 1).createAndApply()
+  override def run(builder: BatchedUpdate.DiffGraphBuilder): Unit = {
+    val stopEarly = new AtomicBoolean(false)
+    val state     = XTypeRecoveryState(config, stopEarly = stopEarly)
+    try {
+      for (
+        i <- 0 until config.iterations
+        if !stopEarly.get()
+      ) {
+        generateRecoveryPass(state.copy(currentIteration = i)).createAndApply()
+      }
+      // If dummy values are enabled and we are stopping early, we need one more round to propagate these dummy values
+      if (stopEarly.get() && config.enabledDummyTypes)
+        generateRecoveryPass(state.copy(currentIteration = config.iterations - 1)).createAndApply()
+    } finally {
+      state.clear()
+    }
+  }
 
-  protected def generateRecoveryPass(finalIterations: Boolean): XTypeRecovery[CompilationUnitType]
+  protected def generateRecoveryPass(state: XTypeRecoveryState): XTypeRecovery[CompilationUnitType]
 
 }
 
@@ -59,12 +110,15 @@ abstract class XTypeRecoveryPass[CompilationUnitType <: AstNode](cpg: Cpg, itera
   * @tparam CompilationUnitType
   *   the AstNode type used to represent a compilation unit of the language.
   */
-abstract class XTypeRecovery[CompilationUnitType <: AstNode](cpg: Cpg) extends CpgPass(cpg) {
+abstract class XTypeRecovery[CompilationUnitType <: AstNode](cpg: Cpg, state: XTypeRecoveryState) extends CpgPass(cpg) {
 
-  override def run(builder: DiffGraphBuilder): Unit =
-    compilationUnit
+  override def run(builder: DiffGraphBuilder): Unit = {
+    val changesWereMade = compilationUnit
       .map(unit => generateRecoveryForCompilationUnitTask(unit, builder).fork())
-      .foreach(_.get())
+      .map(_.get())
+      .reduce((a, b) => a || b)
+    if (!changesWereMade) state.stopEarly.set(true)
+  }
 
   /** @return
     *   the compilation units as per how the language is compiled. e.g. file.
@@ -110,9 +164,6 @@ object XTypeRecovery {
   *   a compilation unit, e.g. file, procedure, type, etc.
   * @param builder
   *   the graph builder
-  * @param enabledDummyTypes
-  *   enables placeholder/dummy types that show where a type comes from. Useful for pattern matching return values or
-  *   field members where types are unknown.
   * @tparam CompilationUnitType
   *   the AstNode type used to represent a compilation unit of the language.
   */
@@ -120,8 +171,8 @@ abstract class RecoverForXCompilationUnit[CompilationUnitType <: AstNode](
   cpg: Cpg,
   cu: CompilationUnitType,
   builder: DiffGraphBuilder,
-  enabledDummyTypes: Boolean = true
-) extends RecursiveTask[Unit] {
+  state: XTypeRecoveryState
+) extends RecursiveTask[Boolean] {
 
   protected val logger: Logger = LoggerFactory.getLogger(getClass)
 
@@ -182,8 +233,7 @@ abstract class RecoverForXCompilationUnit[CompilationUnitType <: AstNode](
   protected def assignments: Traversal[Assignment] =
     cu.ast.isCall.nameExact(Operators.assignment).map(new OpNodes.Assignment(_))
 
-  protected def members: Traversal[Member] =
-    cu.ast.isMember
+  protected def members: Traversal[Member] = cu.ast.isMember
 
   /** For each call that contains the returnValue directive, attempt to replace the return value by the dynamic
     */
@@ -216,21 +266,18 @@ abstract class RecoverForXCompilationUnit[CompilationUnitType <: AstNode](
     }
   }
 
-  override def compute(): Unit = try {
+  override def compute(): Boolean = try {
     prepopulateSymbolTable()
     // Set known aliases that point to imports for local and external methods/modules
     visitImports(importNodes(cu))
     // Prune import names if the methods exist in the CPG
     postVisitImports()
     // Populate local symbol table with assignments
-    // TODO: On iteration > 1 we probably don't need to visit simple declarations as these are already saved
     assignments.foreach(visitAssignments)
-    // Propagate return types
-    cpg.method.ast.isCall.foreach(visitCall)
-    // Propagate parameter types
-    cpg.parameter.foreach(visitParameter)
     // Persist findings
     setTypeInformation()
+    // Return number of changes
+    state.changesWereMade.get()
   } finally {
     symbolTable.clear()
   }
@@ -260,6 +307,7 @@ abstract class RecoverForXCompilationUnit[CompilationUnitType <: AstNode](
     * @param i
     *   the call that imports entities into this scope.
     */
+  @nowarn("cat=unused")
   protected def visitImport(i: Call): Unit = {}
 
   /** Visits an import and stores references in the symbol table as both an identifier and call.
@@ -291,23 +339,18 @@ abstract class RecoverForXCompilationUnit[CompilationUnitType <: AstNode](
     */
   protected def visitAssignments(a: Assignment): Set[String] = {
     a.argumentOut.l match {
-      case List(i: Identifier, b: Block)              => visitIdentifierAssignedToBlock(i, b)
-      case List(i: Identifier, c: Call)               => visitIdentifierAssignedToCall(i, c)
-      case List(x: Identifier, y: Identifier)         => visitIdentifierAssignedToIdentifier(x, y)
-      case List(i: Identifier, l: Literal)            => visitIdentifierAssignedToLiteral(i, l)
-      case List(i: Identifier, m: MethodRef)          => visitIdentifierAssignedToMethodRef(i, m)
-      case List(i: Identifier, t: TypeRef)            => visitIdentifierAssignedToTypeRef(i, t)
-      case List(c: Call, i: Identifier)               => visitCallAssignedToIdentifier(c, i)
-      case List(x: Call, y: Call)                     => visitCallAssignedToCall(x, y)
-      case List(c: Call, l: Literal)                  => visitCallAssignedToLiteral(c, l)
-      case List(c: Call, m: MethodRef)                => visitCallAssignedToMethodRef(c, m)
-      case List(c: Call, b: Block)                    => visitCallAssignedToBlock(c, b)
-      case List(_: CfgNode, _: CfgNode, _: MethodRef) =>
-        // In a previous iteration, this is some call that has imported a method that is now resolved
-        Set.empty
-      case xs =>
-        logger.warn(s"Unhandled assignment ${xs.map(x => (x.label, x.code)).mkString(",")} @ ${debugLocation(a)}")
-        Set.empty
+      case List(i: Identifier, b: Block)                             => visitIdentifierAssignedToBlock(i, b)
+      case List(i: Identifier, c: Call)                              => visitIdentifierAssignedToCall(i, c)
+      case List(x: Identifier, y: Identifier)                        => visitIdentifierAssignedToIdentifier(x, y)
+      case List(i: Identifier, l: Literal) if state.isFirstIteration => visitIdentifierAssignedToLiteral(i, l)
+      case List(i: Identifier, m: MethodRef)                         => visitIdentifierAssignedToMethodRef(i, m)
+      case List(i: Identifier, t: TypeRef)                           => visitIdentifierAssignedToTypeRef(i, t)
+      case List(c: Call, i: Identifier)                              => visitCallAssignedToIdentifier(c, i)
+      case List(x: Call, y: Call)                                    => visitCallAssignedToCall(x, y)
+      case List(c: Call, l: Literal) if state.isFirstIteration       => visitCallAssignedToLiteral(c, l)
+      case List(c: Call, m: MethodRef)                               => visitCallAssignedToMethodRef(c, m)
+      case List(c: Call, b: Block)                                   => visitCallAssignedToBlock(c, b)
+      case _                                                         => Set.empty
     }
   }
 
@@ -383,8 +426,11 @@ abstract class RecoverForXCompilationUnit[CompilationUnitType <: AstNode](
 
   /** A heuristic method to determine if an identifier may be a field or not. The result means that it would be stored
     * in the global symbol table. By default this checks if the identifier name matches a member name.
+    *
+    * This has found to be an expensive operation accessed often so we have memoized this step.
     */
-  protected def isField(i: Identifier): Boolean = i.method.typeDecl.member.exists(_.name.equals(i.name))
+  protected def isField(i: Identifier): Boolean =
+    state.isFieldCache.getOrElseUpdate(i.id(), i.method.typeDecl.member.nameExact(i.name).nonEmpty)
 
   /** Associates the types with the identifier. This may sometimes be an identifier that should be considered a field
     * which this method uses [[isField]] to determine.
@@ -396,7 +442,7 @@ abstract class RecoverForXCompilationUnit[CompilationUnitType <: AstNode](
     */
   protected def getFieldParents(fa: FieldAccess): Set[String] = {
     val fieldName = getFieldName(fa).split(pathSep).last
-    cpg.typeDecl.filter(_.member.exists(_.name.equals(fieldName))).fullName.filterNot(_.contains("ANY")).toSet
+    cpg.typeDecl.where(_.member.nameExact(fieldName)).fullName.filterNot(_.contains("ANY")).toSet
   }
 
   /** Associates the types with the identifier. This may sometimes be an identifier that should be considered a field
@@ -405,13 +451,9 @@ abstract class RecoverForXCompilationUnit[CompilationUnitType <: AstNode](
   protected def associateTypes(symbol: LocalVar, fa: FieldAccess, types: Set[String]): Set[String] = {
     fa.astChildren.filterNot(_.code.matches("(this|self)")).headOption.collect {
       case fi: FieldIdentifier =>
-        getFieldParents(fa).foreach { t =>
-          persistMemberWithTypeDecl(t, fi.canonicalName, types)
-        }
+        getFieldParents(fa).foreach(t => persistMemberWithTypeDecl(t, fi.canonicalName, types))
       case i: Identifier if isField(i) =>
-        getFieldParents(fa).foreach { t =>
-          persistMemberWithTypeDecl(t, i.name, types)
-        }
+        getFieldParents(fa).foreach(t => persistMemberWithTypeDecl(t, i.name, types))
     }
     symbolTable.append(symbol, types)
   }
@@ -496,7 +538,12 @@ abstract class RecoverForXCompilationUnit[CompilationUnitType <: AstNode](
   /** Will attempt to find the return values of a method if in the CPG, otherwise will give a dummy value.
     */
   protected def methodReturnValues(methodFullNames: Seq[String]): Set[String] = {
-    val rs = cpg.method.fullNameExact(methodFullNames: _*).methodReturn.typeFullName.filterNot(_.equals("ANY")).toSet
+    val rs = cpg.method
+      .fullNameExact(methodFullNames: _*)
+      .methodReturn
+      .flatMap(mr => mr.typeFullName +: mr.dynamicTypeHintFullName)
+      .filterNot(_.equals("ANY"))
+      .toSet
     if (rs.isEmpty) methodFullNames.map(_.concat(s"$pathSep${XTypeRecovery.DummyReturnType}")).toSet
     else rs
   }
@@ -751,31 +798,41 @@ abstract class RecoverForXCompilationUnit[CompilationUnitType <: AstNode](
   /** Using an entry from the symbol table, will queue the CPG modification to persist the recovered type information.
     */
   protected def setTypeInformation(): Unit = {
-    cu.ast.foreach {
-      case x: Local if symbolTable.contains(x) =>
-        val typs =
-          if (enabledDummyTypes) symbolTable.get(x).toSeq
-          else symbolTable.get(x).filterNot(XTypeRecovery.isDummyType).toSeq
-        builder.setNodeProperty(x, PropertyNames.DYNAMIC_TYPE_HINT_FULL_NAME, typs)
-      case x: Identifier if symbolTable.contains(x) =>
-        setTypeInformationForRecCall(x, x.inCall.headOption, x.inCall.argument.take(2).l)
-      case x: Call if symbolTable.contains(x) =>
-        val typs =
-          if (enabledDummyTypes) symbolTable.get(x).toSeq
-          else symbolTable.get(x).filterNot(XTypeRecovery.isDummyType).toSeq
-        builder.setNodeProperty(x, PropertyNames.DYNAMIC_TYPE_HINT_FULL_NAME, typs)
-      case x: Identifier if symbolTable.contains(CallAlias(x.name)) && x.inCall.nonEmpty =>
-        setTypeInformationForRecCall(x, x.inCall.headOption, x.inCall.argument.take(2).l)
-      case x: Call if x.argument.headOption.exists(symbolTable.contains) =>
-        setTypeInformationForRecCall(x, x.inCall.headOption, x.inCall.argument.take(2).l)
-      case _ =>
-    }
+    cu.ast
+      .collect {
+        case n: Local      => n
+        case n: Expression => n
+      }
+      .foreach {
+        case x: Local if symbolTable.contains(x) => storeNodeTypeInfo(x, symbolTable.get(x).toSeq)
+        case x: Identifier if symbolTable.contains(x) =>
+          setTypeInformationForRecCall(x, x.inCall.headOption, x.inCall.argument.take(2).l)
+        case x: Call if symbolTable.contains(x) =>
+          val typs =
+            if (state.config.enabledDummyTypes) symbolTable.get(x).toSeq
+            else symbolTable.get(x).filterNot(XTypeRecovery.isDummyType).toSeq
+          if (typs != nodeExistingTypes(x)) {
+            state.changesWereMade.compareAndSet(false, true)
+            builder.setNodeProperty(x, PropertyNames.DYNAMIC_TYPE_HINT_FULL_NAME, typs)
+          }
+        case x: Identifier if symbolTable.contains(CallAlias(x.name)) && x.inCall.nonEmpty =>
+          setTypeInformationForRecCall(x, x.inCall.headOption, x.inCall.argument.take(2).l)
+        case x: Call if x.argument.headOption.exists(symbolTable.contains) =>
+          setTypeInformationForRecCall(x, x.inCall.headOption, x.inCall.argument.take(2).l)
+        case _ =>
+      }
     // Set types in an atomic way
     newTypesForMembers.foreach { case (m, ts) =>
-      if (ts.size == 1) builder.setNodeProperty(m, PropertyNames.TYPE_FULL_NAME, ts.head)
-      else builder.setNodeProperty(m, PropertyNames.DYNAMIC_TYPE_HINT_FULL_NAME, ts)
+      if (ts.toSeq != nodeExistingTypes(m)) {
+        state.changesWereMade.compareAndSet(false, true)
+        if (ts.size == 1) builder.setNodeProperty(m, PropertyNames.TYPE_FULL_NAME, ts.head)
+        else builder.setNodeProperty(m, PropertyNames.DYNAMIC_TYPE_HINT_FULL_NAME, ts)
+      }
     }
   }
+
+  protected def createCallFromIdentifierTypeFullName(typeFullName: String, callName: String): String =
+    s"$typeFullName$pathSep$callName"
 
   /** TODO: Cleaning up using visitor patten
     */
@@ -806,26 +863,26 @@ abstract class RecoverForXCompilationUnit[CompilationUnitType <: AstNode](
         persistType(i, idHints)
         if (callTypes.isEmpty) {
           // For now, calls are treated as function pointers and thus the type should point to the method
-          persistType(call, idHints.map(t => s"$t$pathSep${call.name}"))
+          persistType(call, idHints.map(t => createCallFromIdentifierTypeFullName(t, call.name)))
         } else {
           persistType(call, callTypes)
         }
       // Case 3: 'i' is the receiver for a field access on member 'f'
       case (Some(fieldAccess: Call), List(i: Identifier, f: FieldIdentifier))
           if fieldAccess.name.equals(Operators.fieldAccess) =>
-        val iTypes = if (symbolTable.contains(i)) symbolTable.get(i) else symbolTable.get(CallAlias(i.name))
-        val cTypes = symbolTable.get(fieldAccess)
-        persistType(i, iTypes)
-        persistType(fieldAccess, cTypes)
+        val idHints   = if (symbolTable.contains(i)) symbolTable.get(i) else symbolTable.get(CallAlias(i.name))
+        val callTypes = symbolTable.get(fieldAccess)
+        persistType(i, idHints)
+        persistType(fieldAccess, callTypes)
         Traversal.from(fieldAccess.astParent).isCall.headOption match {
           case Some(callFromFieldName) if symbolTable.contains(callFromFieldName) =>
             persistType(callFromFieldName, symbolTable.get(callFromFieldName))
-          case Some(callFromFieldName) if iTypes.nonEmpty =>
-            persistType(callFromFieldName, iTypes.map(it => s"$it$pathSep${f.canonicalName}"))
+          case Some(callFromFieldName) if idHints.nonEmpty =>
+            persistType(callFromFieldName, idHints.map(it => createCallFromIdentifierTypeFullName(it, f.canonicalName)))
           case _ =>
         }
         // This field may be a function pointer
-        handlePotentialFunctionPointer(fieldAccess, iTypes, f.canonicalName, f.argumentIndex, Option(i.name))
+        handlePotentialFunctionPointer(fieldAccess, idHints, f.canonicalName, f.argumentIndex, Option(i.name))
       case _ => persistType(x, symbolTable.get(x))
     }
 
@@ -863,6 +920,7 @@ abstract class RecoverForXCompilationUnit[CompilationUnitType <: AstNode](
         funcPtr.astParent
           .filterNot(_.astChildren.isMethodRef.methodFullNameExact(mRef.methodFullName).nonEmpty)
           .foreach { inCall =>
+            state.changesWereMade.compareAndSet(false, true)
             builder.addNode(mRef)
             builder.addEdge(mRef, m, EdgeTypes.REF)
             builder.addEdge(inCall, mRef, EdgeTypes.AST)
@@ -873,17 +931,14 @@ abstract class RecoverForXCompilationUnit[CompilationUnitType <: AstNode](
       }
   }
 
-  private def persistType(x: StoredNode, types: Set[String]): Unit = {
-    // TODO: We should track changes for early stopping
-    val filteredTypes = if (enabledDummyTypes) types else types.filterNot(XTypeRecovery.isDummyType)
+  protected def persistType(x: StoredNode, types: Set[String]): Unit = {
+    val filteredTypes = if (state.config.enabledDummyTypes) types else types.filterNot(XTypeRecovery.isDummyType)
     if (filteredTypes.nonEmpty) {
       storeNodeTypeInfo(x, filteredTypes.toSeq)
       x match {
-        case i: Identifier =>
-          if (symbolTable.contains(i)) {
-            if (isField(i)) persistMemberType(i, filteredTypes)
-            handlePotentialFunctionPointer(i, filteredTypes, i.name, i.argumentIndex)
-          }
+        case i: Identifier if symbolTable.contains(i) =>
+          if (isField(i)) persistMemberType(i, filteredTypes)
+          handlePotentialFunctionPointer(i, filteredTypes, i.name, i.argumentIndex)
         case _ =>
       }
     }
@@ -931,7 +986,9 @@ abstract class RecoverForXCompilationUnit[CompilationUnitType <: AstNode](
       .headOption
 
   private def storeNodeTypeInfo(storedNode: StoredNode, types: Seq[String]): Unit = {
-    if (types.nonEmpty) {
+    lazy val existingTypes = nodeExistingTypes(storedNode)
+
+    if (types.nonEmpty && types != existingTypes) {
       storedNode match {
         case m: Member =>
           // To avoid overwriting member updates, we store them elsewhere until the end
@@ -939,11 +996,49 @@ abstract class RecoverForXCompilationUnit[CompilationUnitType <: AstNode](
             case Some(ts) => Some(ts ++ types)
             case None     => Some(types.toSet)
           }
+        case i: Identifier => storeIdentifierTypeInfo(i, types)
+        case l: Local      => storeLocalTypeInfo(l, types)
         case n =>
+          state.changesWereMade.compareAndSet(false, true)
           if (types.size == 1) builder.setNodeProperty(n, PropertyNames.TYPE_FULL_NAME, types.head)
           else builder.setNodeProperty(n, PropertyNames.DYNAMIC_TYPE_HINT_FULL_NAME, types)
       }
     }
+  }
+
+  private def nodeExistingTypes(storedNode: StoredNode): Seq[String] = (storedNode.property(
+    PropertyNames.TYPE_FULL_NAME,
+    "ANY"
+  ) +: storedNode.property(PropertyNames.DYNAMIC_TYPE_HINT_FULL_NAME, Seq.empty)).filterNot(_ == "ANY")
+
+  /** Allows one to modify the types assigned to fields.
+    */
+  protected def storeMemberTypeInfo(m: Member, types: Seq[String]): Unit = {
+    // To avoid overwriting member updates, we store them elsewhere until the end
+    newTypesForMembers.updateWith(m) {
+      case Some(ts) => Some(ts ++ types)
+      case None     => Some(types.toSet)
+    }
+  }
+
+  /** Allows one to modify the types assigned to identifiers.
+    */
+  protected def storeIdentifierTypeInfo(i: Identifier, types: Seq[String]): Unit =
+    storeDefaultTypeInfo(i, types)
+
+  /** Allows one to modify the types assigned to nodes otherwise.
+    */
+  protected def storeDefaultTypeInfo(n: StoredNode, types: Seq[String]): Unit =
+    if (types != nodeExistingTypes(n)) {
+      state.changesWereMade.compareAndSet(false, true)
+      if (types.size == 1) builder.setNodeProperty(n, PropertyNames.TYPE_FULL_NAME, types.head)
+      else builder.setNodeProperty(n, PropertyNames.DYNAMIC_TYPE_HINT_FULL_NAME, types)
+    }
+
+  /** Allows one to modify the types assigned to locals.
+    */
+  protected def storeLocalTypeInfo(l: Local, types: Seq[String]): Unit = {
+    storeDefaultTypeInfo(l, if (state.config.enabledDummyTypes) types else types.filterNot(XTypeRecovery.isDummyType))
   }
 
 }
