@@ -143,7 +143,7 @@ trait KtPsiToAst {
       val fullName      = s"${typeDecl.fullName}.$componentName:$signature"
       methodAst(
         methodNode(componentName, fullName, signature, relativizedPath),
-        Seq(thisParam),
+        Seq(Ast(thisParam)),
         methodBlockAst,
         methodReturnNode(typeFullName, None, None, None)
       )
@@ -173,10 +173,9 @@ trait KtPsiToAst {
 
       val ctorMethodReturnNode =
         methodReturnNode(TypeConstants.void, None, Option(line(ctor)), Option(column(ctor)))
-      val ctorParams = constructorParamsAsts.flatMap(_.root.collectAll[NewMethodParameterIn])
 
       // TODO: see if necessary to take the other asts for the ctorMethodBlock
-      methodAst(secondaryCtorMethodNode, ctorParams, ctorMethodBlockAst.head, ctorMethodReturnNode)
+      methodAst(secondaryCtorMethodNode, constructorParamsAsts, ctorMethodBlockAst.head, ctorMethodReturnNode)
     }
   }
 
@@ -262,7 +261,7 @@ trait KtPsiToAst {
     )
     val constructorAst = methodAst(
       primaryCtorMethodNode,
-      constructorParamsAsts.flatMap(_.root.collectAll[NewMethodParameterIn]),
+      constructorParamsAsts,
       blockAst(blockNode("", TypeConstants.void), memberSetCalls ++ anonymousInitAsts),
       constructorMethodReturn
     )
@@ -320,8 +319,10 @@ trait KtPsiToAst {
       BindingInfo(node, List((typeDecl, node, EdgeTypes.BINDS), (node, _methodNode, EdgeTypes.REF)))
     }
 
+    val annotationAsts = ktClass.getAnnotationEntries.asScala.map(astForAnnotationEntry).toSeq
+
     val children = methodAsts ++ List(constructorAst) ++ membersFromPrimaryCtorAsts ++ secondaryConstructorAsts ++
-      _componentNMethodAsts.toList ++ memberAsts
+      _componentNMethodAsts.toList ++ memberAsts ++ annotationAsts
     val ast = Ast(typeDecl).withChildren(children)
 
     (List(ctorBindingInfo) ++ bindingsInfo ++ componentNBindingsInfo).foreach(bindingInfoQueue.prepend)
@@ -342,6 +343,18 @@ trait KtPsiToAst {
     scope.popScope()
 
     Seq(finalAst) ++ companionObjectAsts ++ innerTypeDeclAsts
+  }
+
+  def astForAnnotationEntry(entry: KtAnnotationEntry)(implicit typeInfoProvider: TypeInfoProvider): Ast = {
+    val typeFullName = registerType(typeInfoProvider.typeFullName(entry, TypeConstants.any))
+    val node =
+      NewAnnotation()
+        .code(entry.getText)
+        .name(entry.getShortName.toString)
+        .lineNumber(line(entry))
+        .columnNumber(column(entry))
+        .fullName(typeFullName)
+    annotationAst(node, List())
   }
 
   def astsForMethod(ktFn: KtNamedFunction, needsThisParameter: Boolean = false, withVirtualModifier: Boolean = false)(
@@ -368,9 +381,9 @@ trait KtPsiToAst {
       Option(node)
     } else None
 
-    val parameters = thisParameterMaybe.map(List(_)).getOrElse(List()) ++
+    val thisParameterAsts = thisParameterMaybe.map(List(_)).getOrElse(List()).map(Ast(_))
+    val methodParametersAsts =
       withIndex(ktFn.getValueParameters.asScala.toSeq) { (p, idx) => astForParameter(p, idx) }
-        .flatMap(_.root.collectAll[NewMethodParameterIn])
     val bodyAsts = Option(ktFn.getBodyBlockExpression) match {
       case Some(bodyBlockExpression) => astsForBlock(bodyBlockExpression, None)
       case None =>
@@ -391,9 +404,12 @@ trait KtPsiToAst {
     val modifierNodes =
       if (withVirtualModifier) Seq(modifierNode(ModifierTypes.VIRTUAL))
       else Seq()
+
+    val annotationEntries = ktFn.getAnnotationEntries.asScala.map(astForAnnotationEntry).toSeq
     Seq(
-      methodAst(_methodNode, parameters, bodyAst, _methodReturnNode, modifierNodes)
+      methodAst(_methodNode, thisParameterAsts ++ methodParametersAsts, bodyAst, _methodReturnNode, modifierNodes)
         .withChildren(otherBodyAsts)
+        .withChildren(annotationEntries)
     )
   }
 
@@ -568,7 +584,7 @@ trait KtPsiToAst {
     val bodyAst = bodyAsts.head
     val lambdaMethodAst = methodAst(
       lambdaMethodNode,
-      parametersAsts.flatMap(_.root.collectAll[NewMethodParameterIn]),
+      parametersAsts,
       bodyAst,
       methodReturnNode(returnTypeFullName, None, Some(line(expr)), Some(column(expr)))
     ).withChild(Ast(modifierNode(ModifierTypes.VIRTUAL)))
@@ -1775,7 +1791,10 @@ trait KtPsiToAst {
     val typeFullName     = registerType(typeInfoProvider.parameterType(param, explicitTypeName))
     val node             = methodParameterNode(name, typeFullName, line(param), column(param)).order(order)
     scope.addToScope(name, node)
+
+    val annotations = param.getAnnotationEntries.asScala.map(astForAnnotationEntry).toSeq
     Ast(node)
+      .withChildren(annotations)
   }
 
 }
