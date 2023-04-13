@@ -8,12 +8,12 @@ import io.joern.scanners._
 import io.shiftleft.codepropertygraph.generated.Operators
 import io.shiftleft.semanticcpg.language._
 
-object CodeInjection extends QueryBundle {
+object FileInclusion extends QueryBundle {
 
   implicit val resolver: ICallResolver = NoResolve
 
   @q
-  def CodeInjection()(implicit context: EngineContext): Query =
+  def FileInclusion()(implicit context: EngineContext): Query =
     Query.make(
       name = "file-inclusion",
       author = Crew.niko,
@@ -33,7 +33,7 @@ object CodeInjection extends QueryBundle {
         // dynamically evaluated at runtime 
         // eval('Heloo')  X
         // eval ($code)   V
-        def sink = cpg.call.code(".*(include|require|include_once|require_once).*").argument 
+        def sink = cpg.call.code(".*(include|require|include_once|require_once).*").argument.isIdentifier
 
         sink.reachableBy(source).l 
       }),

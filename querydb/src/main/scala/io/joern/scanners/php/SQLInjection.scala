@@ -13,7 +13,7 @@ object SQLInjection extends QueryBundle {
   implicit val resolver: ICallResolver = NoResolve
 
   @q
-  def shellExec()(implicit context: EngineContext): Query =
+  def SQLInjection()(implicit context: EngineContext): Query =
     Query.make(
       name = "sql-injection",
       author = Crew.niko,
