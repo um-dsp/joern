@@ -33,7 +33,7 @@ object FileInclusion extends QueryBundle {
         // dynamically evaluated at runtime 
         // eval('Heloo')  X
         // eval ($code)   V
-        def sink = cpg.call.code(".*(include|require|include_once|require_once).*").argument.isIdentifier
+        def sink = cpg.call.code(".*(include|require|include_once|require_once).*").argument
 
         sink.reachableBy(source).l 
       }),

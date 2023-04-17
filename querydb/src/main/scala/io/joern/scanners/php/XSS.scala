@@ -8,12 +8,12 @@ import io.joern.scanners._
 import io.shiftleft.codepropertygraph.generated.Operators
 import io.shiftleft.semanticcpg.language._
 
-object Xss extends QueryBundle {
+object XSS extends QueryBundle {
 
   implicit val resolver: ICallResolver = NoResolve
 
   @q
-  def Xss()(implicit context: EngineContext): Query =
+  def XSS()(implicit context: EngineContext): Query =
     Query.make(
       name = "xss",
       author = Crew.niko,

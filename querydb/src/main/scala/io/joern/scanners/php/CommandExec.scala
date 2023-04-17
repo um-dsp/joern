@@ -8,12 +8,12 @@ import io.joern.scanners._
 import io.shiftleft.codepropertygraph.generated.Operators
 import io.shiftleft.semanticcpg.language._
 
-object ShellExec extends QueryBundle {
+object CommandExec extends QueryBundle {
 
   implicit val resolver: ICallResolver = NoResolve
 
   @q
-  def shellExec()(implicit context: EngineContext): Query =
+  def CommandExec()(implicit context: EngineContext): Query =
     Query.make(
       name = "command-exec",
       author = Crew.niko,
