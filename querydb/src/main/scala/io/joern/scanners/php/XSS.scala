@@ -19,11 +19,11 @@ object Xss extends QueryBundle {
       author = Crew.niko,
       title = "Cross site scripting vulnerability.",
       description = """
-          |An attacker controlled parameter is used in an insecure `shell-exec` call.
+          |An attacker controlled parameter is used in an insecure echo | print  call.
           |
           |If the parameter is not validated and sanitized, this is a remote code execution.
           |""".stripMargin,
-      score = 5,
+      score = 10,
       withStrRep({ cpg =>
         // $_REQUEST["foo"], $_GET["foo"], $_POST["foo"]
         // are identifier (at the moment)

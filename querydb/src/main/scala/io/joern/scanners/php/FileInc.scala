@@ -23,7 +23,7 @@ object FileInclusion extends QueryBundle {
           |
           |If the parameter is not validated and sanitized, this is a remote code execution.
           |""".stripMargin,
-      score = 5,
+      score = 12,
       withStrRep({ cpg =>
         // $_REQUEST["foo"], $_GET["foo"], $_POST["foo"]
         // are identifier (at the moment)

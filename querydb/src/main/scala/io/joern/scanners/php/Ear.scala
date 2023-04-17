@@ -8,31 +8,33 @@ import io.joern.scanners._
 import io.shiftleft.codepropertygraph.generated.Operators
 import io.shiftleft.semanticcpg.language._
 
-object ShellExec extends QueryBundle {
+object ExecutionAfterRedirect extends QueryBundle {
 
   implicit val resolver: ICallResolver = NoResolve
 
   @q
-  def shellExec()(implicit context: EngineContext): Query =
+  def ExecutionAfterRedirect()(implicit context: EngineContext): Query =
     Query.make(
-      name = "command-exec",
+      name = "file-inclusion",
       author = Crew.niko,
-      title = "Command exec: A parameter is used in an insecure command call.",
+      title = "EAR  vulnerability.",
       description = """
-          |An attacker controlled parameter is used in an insecure OS command call.
-          |
-          |If the parameter is not validated and sanitized, this is a remote code execution.
+          |Execution after redirect vulnerability.
+          
           |""".stripMargin,
-      score = 13,
+      score = 12,
       withStrRep({ cpg =>
         // $_REQUEST["foo"], $_GET["foo"], $_POST["foo"]
         // are identifier (at the moment)
         def source =
           cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST).*")
+        // extracts all eval, include and require statements and check that their arguments 
+        // dynamically evaluated at runtime 
+        // eval('Heloo')  X
+        // eval ($code)   V
+        def sink = cpg.call.code(".*(include|require|include_once|require_once).*").argument.isIdentifier
 
-        def sink = cpg.call.name("shell_exec|exec|system|mail|popen|expect_popen|passthru|pcntl_exec|proc_opend|backticks").argument
-
-        sink.reachableBy(source).l
+        sink.reachableBy(source).l 
       }),
       tags = List(QueryTags.remoteCodeExecution, QueryTags.default)
     )
