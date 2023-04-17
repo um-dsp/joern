@@ -1,0 +1,19 @@
+2529,MEMBER,const version,,,20,version,1,ANY
+2531,MEMBER,$breaksEnabled,,,66,breaksEnabled,2,ANY
+2533,MEMBER,$markupEscaped,,,75,markupEscaped,3,ANY
+2535,MEMBER,$urlsLinked,,,84,urlsLinked,4,ANY
+2537,MEMBER,$safeMode,,,93,safeMode,5,ANY
+2539,MEMBER,$strictMode,,,102,strictMode,6,ANY
+2541,MEMBER,$safeLinksWhitelist,,,104,safeLinksWhitelist,7,ANY
+2543,MEMBER,$BlockTypes,,,126,BlockTypes,8,ANY
+2545,MEMBER,$unmarkedBlockTypes,,,154,unmarkedBlockTypes,9,ANY
+2547,MEMBER,$InlineTypes,,,1109,InlineTypes,10,ANY
+2549,MEMBER,$inlineMarkerList,,,1124,inlineMarkerList,11,ANY
+2551,MEMBER,$instances,,,1952,instances,12,ANY
+2554,MEMBER,$DefinitionData,,,1958,DefinitionData,13,ANY
+2556,MEMBER,$specialCharacters,,,1963,specialCharacters,14,ANY
+2558,MEMBER,$StrongRegex,,,1967,StrongRegex,15,ANY
+2560,MEMBER,$EmRegex,,,1972,EmRegex,16,ANY
+2562,MEMBER,$regexHtmlAttribute,,,1977,regexHtmlAttribute,17,ANY
+2564,MEMBER,$voidElements,,,1979,voidElements,18,ANY
+2566,MEMBER,$textLevelElements,,,1983,textLevelElements,19,ANY

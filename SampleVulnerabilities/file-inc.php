@@ -1,5 +1,4 @@
 <?php
-include 'test.php';
-
-echo "$book_name";
+$file_name = $_POST['file_name'];
+include ($file_name . '.php');
 ?>
