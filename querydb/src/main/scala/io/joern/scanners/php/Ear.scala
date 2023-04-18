@@ -15,7 +15,7 @@ object ExecutionAfterRedirect extends QueryBundle {
   @q
   def ExecutionAfterRedirect()(implicit context: EngineContext): Query =
     Query.make(
-      name = "file-inclusion",
+      name = "php-ear-vulnerability",
       author = Crew.niko,
       title = "EAR  vulnerability.",
       description = """
@@ -28,11 +28,8 @@ object ExecutionAfterRedirect extends QueryBundle {
         // are identifier (at the moment)
         def source =
           cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST).*")
-        // extracts all eval, include and require statements and check that their arguments 
-        // dynamically evaluated at runtime 
-        // eval('Heloo')  X
-        // eval ($code)   V
-        def sink = cpg.call.code(".*(include|require|include_once|require_once).*").argument.isIdentifier
+       
+        def sink = cpg.call("header").filter(_.code.contains("Location")).argument
 
         sink.reachableBy(source).l 
       }),

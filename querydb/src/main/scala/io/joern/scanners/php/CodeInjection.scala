@@ -15,7 +15,7 @@ object CodeInjection extends QueryBundle {
   @q
   def CodeInjection()(implicit context: EngineContext): Query =
     Query.make(
-      name = "code-injection",
+      name = "php-code-injection",
       author = Crew.niko,
       title = "Code Injection vulnerability.",
       description = """

@@ -15,7 +15,7 @@ object FileInclusion extends QueryBundle {
   @q
   def FileInclusion()(implicit context: EngineContext): Query =
     Query.make(
-      name = "file-inclusion",
+      name = "fphp-file-inclusion",
       author = Crew.niko,
       title = "File inclusion vulnerability.",
       description = """
@@ -29,10 +29,7 @@ object FileInclusion extends QueryBundle {
         // are identifier (at the moment)
         def source =
           cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST).*")
-        // extracts all eval, include and require statements and check that their arguments 
-        // dynamically evaluated at runtime 
-        // eval('Heloo')  X
-        // eval ($code)   V
+        
         def sink = cpg.call.code(".*(include|require|include_once|require_once).*").argument
 
         sink.reachableBy(source).l 

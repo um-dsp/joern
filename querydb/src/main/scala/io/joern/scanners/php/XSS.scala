@@ -15,7 +15,7 @@ object XSS extends QueryBundle {
   @q
   def XSS()(implicit context: EngineContext): Query =
     Query.make(
-      name = "xss",
+      name = "php-xss",
       author = Crew.niko,
       title = "Cross site scripting vulnerability.",
       description = """
