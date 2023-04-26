@@ -1,11 +1,13 @@
 package io.joern.c2cpg.astcreation
 
 import io.joern.c2cpg.datastructures.CGlobal
-import io.joern.c2cpg.utils.IOUtils
 import io.shiftleft.codepropertygraph.generated.nodes.{ExpressionNew, NewNode}
 import io.shiftleft.codepropertygraph.generated.{DispatchTypes, Operators}
 import io.joern.x2cpg.Ast
+import io.joern.x2cpg.SourceFiles
+import io.joern.x2cpg.utils.NodeBuilders.dependencyNode
 import io.shiftleft.codepropertygraph.generated.EdgeTypes
+import io.shiftleft.utils.IOUtils
 import org.apache.commons.lang.StringUtils
 import org.eclipse.cdt.core.dom.ast._
 import org.eclipse.cdt.core.dom.ast.c.{ICASTArrayDesignator, ICASTDesignatedInitializer, ICASTFieldDesignator}
@@ -22,14 +24,14 @@ import scala.annotation.nowarn
 import scala.collection.mutable
 
 object AstCreatorHelper {
+
+  // maximum length of code fields in number of characters
+  private val MaxCodeLength: Int = 1000
+  private val MinCodeLength: Int = 50
+
   implicit class OptionSafeAst(val ast: Ast) extends AnyVal {
     def withArgEdge(src: NewNode, dst: Option[NewNode]): Ast = dst match {
       case Some(value) => ast.withArgEdge(src, value)
-      case None        => ast
-    }
-
-    def withConditionEdge(src: NewNode, dst: Option[NewNode]): Ast = dst match {
-      case Some(value) => ast.withConditionEdge(src, value)
       case None        => ast
     }
   }
@@ -37,7 +39,11 @@ object AstCreatorHelper {
 
 trait AstCreatorHelper { this: AstCreator =>
 
+  import AstCreatorHelper._
+
   private var usedNames: Int = 0
+
+  private val IncludeKeyword = "include"
 
   protected def uniqueName(target: String, name: String, fullName: String): (String, String) = {
     if (name.isEmpty && (fullName.isEmpty || fullName.endsWith("."))) {
@@ -51,12 +57,12 @@ trait AstCreatorHelper { this: AstCreator =>
   }
 
   private def fileOffsetTable(node: IASTNode): Array[Int] = {
-    val path = IOUtils.toAbsolutePath(fileName(node), config)
+    val path = SourceFiles.toAbsolutePath(fileName(node), config.inputPath)
     file2OffsetTable.computeIfAbsent(path, _ => genFileOffsetTable(Paths.get(path)))
   }
 
   private def genFileOffsetTable(absolutePath: Path): Array[Int] = {
-    val asCharArray = io.shiftleft.utils.IOUtils.readLinesInFile(absolutePath).mkString("\n").toCharArray
+    val asCharArray = IOUtils.readLinesInFile(absolutePath).mkString("\n").toCharArray
     val offsets     = mutable.ArrayBuffer.empty[Int]
 
     for (i <- Range(0, asCharArray.length)) {
@@ -75,14 +81,14 @@ trait AstCreatorHelper { this: AstCreator =>
 
   protected def fileName(node: IASTNode): String = {
     val path = nullSafeFileLocation(node).map(_.getFileName).getOrElse(filename)
-    IOUtils.toRelativePath(path, config)
+    SourceFiles.toRelativePath(path, config.inputPath)
   }
 
-  protected def line(node: IASTNode): Option[Int] = {
+  protected def line(node: IASTNode): Option[Integer] = {
     nullSafeFileLocation(node).map(_.getStartingLineNumber)
   }
 
-  protected def lineEnd(node: IASTNode): Option[Int] = {
+  protected def lineEnd(node: IASTNode): Option[Integer] = {
     nullSafeFileLocationLast(node).map(_.getEndingLineNumber)
   }
 
@@ -99,16 +105,15 @@ trait AstCreatorHelper { this: AstCreator =>
     column
   }
 
-  protected def column(node: IASTNode): Option[Int] = {
+  protected def column(node: IASTNode): Option[Integer] = {
     val loc = nullSafeFileLocation(node)
     loc.map { x =>
       offsetToColumn(node, x.getNodeOffset)
     }
   }
 
-  protected def columnEnd(node: IASTNode): Option[Int] = {
+  protected def columnEnd(node: IASTNode): Option[Integer] = {
     val loc = nullSafeFileLocation(node)
-
     loc.map { x =>
       offsetToColumn(node, x.getNodeOffset + x.getNodeLength - 1)
     }
@@ -142,7 +147,13 @@ trait AstCreatorHelper { this: AstCreator =>
   protected def cleanType(rawType: String, stripKeywords: Boolean = true): String = {
     val tpe =
       if (stripKeywords) {
-        reservedTypeKeywords.foldLeft(rawType)((cur, repl) => cur.replace(s"$repl ", ""))
+        reservedTypeKeywords.foldLeft(rawType) { (cur, repl) =>
+          if (cur.contains(s"$repl ")) {
+            dereferenceTypeFullName(cur.replace(s"$repl ", ""))
+          } else {
+            cur
+          }
+        }
       } else {
         rawType
       }
@@ -158,7 +169,7 @@ trait AstCreatorHelper { this: AstCreator =>
       case t if t.contains(Defines.qualifiedNameSeparator) =>
         fixQualifiedName(t).split(".").lastOption.getOrElse(Defines.anyTypeName)
       case t if t.contains("[") && t.contains("]") => t.replace(" ", "")
-      case t if t.contains("*")                    => t.replace("*", "").replace(" ", "")
+      case t if t.contains("*")                    => t.replace(" ", "")
       case someType                                => someType
     }
   }
@@ -178,6 +189,8 @@ trait AstCreatorHelper { this: AstCreator =>
         val nodeType = ASTTypeUtil.getNodeType(node)
         val arr      = nodeType.substring(nodeType.indexOf("["), nodeType.indexOf("]") + 1)
         s"$tpe$arr"
+      case a: IASTArrayDeclarator if ASTTypeUtil.getNodeType(a).contains(" [") =>
+        cleanType(ASTTypeUtil.getNodeType(node))
       case _: IASTIdExpression | _: IASTName | _: IASTDeclarator =>
         cleanType(ASTTypeUtil.getNodeType(node), stripKeywords)
       case s: IASTNamedTypeSpecifier =>
@@ -197,6 +210,9 @@ trait AstCreatorHelper { this: AstCreator =>
     }
   }
 
+  protected def shortenCode(code: String, length: Int = MaxCodeLength): String =
+    StringUtils.abbreviate(code, math.max(MinCodeLength, length))
+
   private def notHandledText(node: IASTNode): String =
     s"""Node '${node.getClass.getSimpleName}' not handled yet!
        |  Code: '${node.getRawSignature}'
@@ -209,7 +225,7 @@ trait AstCreatorHelper { this: AstCreator =>
       val text = notHandledText(node)
       logger.info(text)
     }
-    Ast(newUnknownNode(node))
+    Ast(unknownNode(node, nodeSignature(node)))
   }
 
   protected def nullSafeCode(node: IASTNode): String = {
@@ -233,8 +249,11 @@ trait AstCreatorHelper { this: AstCreator =>
     Option(node).map(astsForStatement(_, argIndex)).getOrElse(Seq.empty)
   }
 
+  protected def dereferenceTypeFullName(fullName: String): String =
+    fullName.replace("*", "")
+
   protected def fixQualifiedName(name: String): String =
-    name.replace(Defines.qualifiedNameSeparator, ".")
+    name.stripPrefix(Defines.qualifiedNameSeparator).replace(Defines.qualifiedNameSeparator, ".")
 
   protected def isQualifiedName(name: String): Boolean =
     name.startsWith(Defines.qualifiedNameSeparator)
@@ -285,17 +304,17 @@ trait AstCreatorHelper { this: AstCreator =>
         s"${fullName(enumSpecifier.getParent)}.${ASTStringUtil.getSimpleName(enumSpecifier.getName)}"
       case c: IASTCompositeTypeSpecifier =>
         s"${fullName(c.getParent)}.${ASTStringUtil.getSimpleName(c.getName)}"
-      case f: IASTFunctionDeclarator
-          if ASTStringUtil.getSimpleName(f.getName).isEmpty && f.getNestedDeclarator != null =>
-        s"${fullName(f.getParent)}.${ASTStringUtil.getSimpleName(f.getNestedDeclarator.getName)}"
-      case f: IASTFunctionDeclarator =>
-        s"${fullName(f.getParent)}.${ASTStringUtil.getSimpleName(f.getName)}"
       case f: ICPPASTLambdaExpression =>
         s"${fullName(f.getParent)}."
+      case f: IASTFunctionDeclarator
+          if ASTStringUtil.getSimpleName(f.getName).isEmpty && f.getNestedDeclarator != null =>
+        s"${fullName(f.getParent)}.${shortName(f.getNestedDeclarator)}"
+      case f: IASTFunctionDeclarator =>
+        s"${fullName(f.getParent)}.${ASTStringUtil.getSimpleName(f.getName)}"
       case f: IASTFunctionDefinition if f.getDeclarator != null =>
         s"${fullName(f.getParent)}.${ASTStringUtil.getQualifiedName(f.getDeclarator.getName)}"
       case f: IASTFunctionDefinition =>
-        s"${fullName(f.getParent)}.${ASTStringUtil.getSimpleName(f.getDeclarator.getName)}"
+        s"${fullName(f.getParent)}.${shortName(f)}"
       case e: IASTElaboratedTypeSpecifier =>
         s"${fullName(e.getParent)}.${ASTStringUtil.getSimpleName(e.getName)}"
       case d: IASTIdExpression              => ASTStringUtil.getSimpleName(d.getName)
@@ -305,19 +324,29 @@ trait AstCreatorHelper { this: AstCreator =>
       case other if other != null           => notHandledYet(other); ""
       case null                             => ""
     }
-    val cleaned = fixQualifiedName(qualifiedName)
-    if (cleaned.startsWith(".")) {
-      cleaned.substring(1)
-    } else cleaned
+    fixQualifiedName(qualifiedName).stripPrefix(".")
   }
 
   protected def shortName(node: IASTNode): String = {
     val name = node match {
+      case d: IASTDeclarator if ASTStringUtil.getSimpleName(d.getName).isEmpty && d.getNestedDeclarator != null =>
+        shortName(d.getNestedDeclarator)
+      case d: IASTDeclarator => ASTStringUtil.getSimpleName(d.getName)
+      case f: ICPPASTFunctionDefinition
+          if ASTStringUtil
+            .getSimpleName(f.getDeclarator.getName)
+            .isEmpty && f.getDeclarator.getNestedDeclarator != null =>
+        shortName(f.getDeclarator.getNestedDeclarator)
       case f: ICPPASTFunctionDefinition => lastNameOfQualifiedName(ASTStringUtil.getSimpleName(f.getDeclarator.getName))
-      case f: IASTFunctionDefinition    => ASTStringUtil.getSimpleName(f.getDeclarator.getName)
+      case f: IASTFunctionDefinition
+          if ASTStringUtil
+            .getSimpleName(f.getDeclarator.getName)
+            .isEmpty && f.getDeclarator.getNestedDeclarator != null =>
+        shortName(f.getDeclarator.getNestedDeclarator)
+      case f: IASTFunctionDefinition => ASTStringUtil.getSimpleName(f.getDeclarator.getName)
       case f: IASTFunctionDeclarator
           if ASTStringUtil.getSimpleName(f.getName).isEmpty && f.getNestedDeclarator != null =>
-        ASTStringUtil.getSimpleName(f.getNestedDeclarator.getName)
+        shortName(f.getNestedDeclarator)
       case f: IASTFunctionDeclarator => ASTStringUtil.getSimpleName(f.getName)
       case d: CPPASTIdExpression if d.getEvaluation.isInstanceOf[EvalBinding] =>
         val evaluation = d.getEvaluation.asInstanceOf[EvalBinding]
@@ -341,7 +370,7 @@ trait AstCreatorHelper { this: AstCreator =>
     val tpe      = typeFor(spec, stripKeywords)
     val pointers = parentDecl.getPointerOperators
     val arr = parentDecl match {
-      case p: IASTArrayDeclarator => "[]" * p.getArrayModifiers.length
+      case p: IASTArrayDeclarator => p.getArrayModifiers.toList.map(_.getRawSignature).mkString
       case _                      => ""
     }
     if (pointers.isEmpty) { s"$tpe$arr" }
@@ -354,11 +383,11 @@ trait AstCreatorHelper { this: AstCreator =>
   protected def attachDependenciesAndImports(iASTTranslationUnit: IASTTranslationUnit): Unit = {
     val allIncludes = iASTTranslationUnit.getIncludeDirectives.toIndexedSeq
     allIncludes.foreach { include =>
-      val name           = include.getName.toString
-      val dependencyNode = newDependencyNode(name, "include")
-      val importNode     = newImportNode(nodeSignature(include), name, include)
-      diffGraph.addNode(dependencyNode)
-      diffGraph.addEdge(importNode, dependencyNode, EdgeTypes.IMPORTS)
+      val name            = include.getName.toString
+      val _dependencyNode = dependencyNode(name, name, IncludeKeyword)
+      val importNode      = newImportNode(nodeSignature(include), name, include)
+      diffGraph.addNode(_dependencyNode)
+      diffGraph.addEdge(importNode, _dependencyNode, EdgeTypes.IMPORTS)
     }
   }
 
@@ -380,26 +409,23 @@ trait AstCreatorHelper { this: AstCreator =>
   }
 
   private def astForCASTDesignatedInitializer(d: ICASTDesignatedInitializer): Ast = {
-    val b = newBlockNode(d, Defines.voidTypeName)
-    scope.pushNewScope(b)
+    val node = blockNode(d, Defines.empty, Defines.voidTypeName)
+    scope.pushNewScope(node)
     val op = Operators.assignment
-
     val calls = withIndex(d.getDesignators) { (des, o) =>
       val callNode = newCallNode(d, op, op, DispatchTypes.STATIC_DISPATCH, o)
       val left     = astForNode(des)
       val right    = astForNode(d.getOperand)
       callAst(callNode, List(left, right))
     }
-
     scope.popScope()
-    Ast(b).withChildren(calls)
+    blockAst(node, calls.toList)
   }
 
   private def astForCPPASTDesignatedInitializer(d: ICPPASTDesignatedInitializer): Ast = {
-    val b = newBlockNode(d, Defines.voidTypeName)
-    scope.pushNewScope(b)
+    val node = blockNode(d, Defines.empty, Defines.voidTypeName)
+    scope.pushNewScope(node)
     val op = Operators.assignment
-
     val calls = withIndex(d.getDesignators) { (des, o) =>
       val callNode = newCallNode(d, op, op, DispatchTypes.STATIC_DISPATCH, o)
       val left     = astForNode(des)
@@ -407,7 +433,7 @@ trait AstCreatorHelper { this: AstCreator =>
       callAst(callNode, List(left, right))
     }
     scope.popScope()
-    Ast(b).withChildren(calls)
+    blockAst(node, calls.toList)
   }
 
   private def astForCPPASTConstructorInitializer(c: ICPPASTConstructorInitializer): Ast = {

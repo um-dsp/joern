@@ -51,7 +51,8 @@ class ImportCode[T <: Project](console: io.joern.console.Console[T]) extends Rep
   def kotlin: SourceBasedFrontend =
     new SourceBasedFrontend("kotlin", Languages.KOTLIN, "Kotlin Source Frontend", "kotlin")
 
-  def python: SourceBasedFrontend = new SourceBasedFrontend("python", Languages.PYTHON, "Python Source Frontend", "py")
+  def python: SourceBasedFrontend =
+    new SourceBasedFrontend("python", Languages.PYTHONSRC, "Python Source Frontend", "py")
   def golang: SourceBasedFrontend = new SourceBasedFrontend("golang", Languages.GOLANG, "Golang Source Frontend", "go")
   def javascript: SourceBasedFrontend =
     new SourceBasedFrontend("javascript", Languages.JAVASCRIPT, "Javascript Source Frontend", "js")
@@ -61,6 +62,7 @@ class ImportCode[T <: Project](console: io.joern.console.Console[T]) extends Rep
 
   def llvm: Frontend = new Frontend("llvm", Languages.LLVM, "LLVM Bitcode Frontend")
   def php: Frontend  = new Frontend("php", Languages.PHP, "PHP bytecode frontend")
+  def ruby: Frontend = new Frontend("ruby", Languages.RUBYSRC, "Ruby source frontend")
 
   class Frontend(val name: String, val language: String, val description: String = "") {
     def cpgGeneratorForLanguage(
