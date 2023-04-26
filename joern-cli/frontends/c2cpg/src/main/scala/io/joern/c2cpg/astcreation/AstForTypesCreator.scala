@@ -71,7 +71,10 @@ trait AstForTypesCreator { this: AstCreator =>
         val tpe      = registerType(typeFor(declarator))
         Ast(newTypeDeclNode(declarator, name, registerType(name), filename, nodeSignature(d), alias = Option(tpe)))
       case d if parentIsClassDef(d) =>
-        val tpe = registerType(typeFor(declaration.getDeclSpecifier))
+        val tpe = declarator match {
+          case _: IASTArrayDeclarator => registerType(typeFor(declarator))
+          case _                      => registerType(typeForDeclSpecifier(declaration.getDeclSpecifier))
+        }
         Ast(newMemberNode(declarator, name, nodeSignature(declarator), tpe))
       case _ if declarator.isInstanceOf[IASTArrayDeclarator] =>
         val tpe       = registerType(typeFor(declarator))
@@ -142,17 +145,17 @@ trait AstForTypesCreator { this: AstCreator =>
     Ast(typeDeclNode)
   }
 
-  protected def astForASMDeclaration(asm: IASTASMDeclaration): Ast = Ast(newUnknownNode(asm))
+  protected def astForASMDeclaration(asm: IASTASMDeclaration): Ast = Ast(unknownNode(asm, nodeSignature(asm)))
 
   private def astForStructuredBindingDeclaration(decl: ICPPASTStructuredBindingDeclaration): Ast = {
-    val cpgBlock = newBlockNode(decl, Defines.voidTypeName)
-    scope.pushNewScope(cpgBlock)
+    val node = blockNode(decl, Defines.empty, Defines.voidTypeName)
+    scope.pushNewScope(node)
     val childAsts = decl.getNames.toList.map { name =>
       astForNode(name)
     }
-    val blockAst = Ast(cpgBlock).withChildren(childAsts)
     scope.popScope()
-    blockAst
+    setArgumentIndices(childAsts)
+    blockAst(node, childAsts)
   }
 
   protected def astsForDeclaration(decl: IASTDeclaration): Seq[Ast] = {

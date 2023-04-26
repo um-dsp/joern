@@ -94,6 +94,7 @@ primary
     |   arrayConstructor                                                                                            # arrayConstructorPrimary
     |   hashConstructor                                                                                             # hashConstructorPrimary
     |   literal                                                                                                     # literalPrimary
+    |   stringInterpolation                                                                                         # stringInterpolationPrimary
     |   IS_DEFINED LPAREN expressionOrCommand RPAREN                                                                # isDefinedPrimary
     |   SUPER argumentsWithParentheses? block?                                                                      # superExpressionPrimary
     |   primary LBRACK WS* indexingArguments? WS* RBRACK                                                            # indexingExpressionPrimary
@@ -207,9 +208,9 @@ indexingArguments
 
 argumentsWithParentheses
     :   LPAREN wsOrNl* RPAREN
-    |   LPAREN arguments RPAREN
-    |   LPAREN expressions WS* COMMA wsOrNl* chainedCommandWithDoBlock wsOrNl* RPAREN
-    |   LPAREN chainedCommandWithDoBlock RPAREN
+    |   LPAREN wsOrNl* arguments (WS* COMMA)? wsOrNl* RPAREN
+    |   LPAREN wsOrNl* expressions WS* COMMA wsOrNl* chainedCommandWithDoBlock wsOrNl* RPAREN
+    |   LPAREN wsOrNl* chainedCommandWithDoBlock wsOrNl* RPAREN
     ;
 
 expressions
@@ -271,8 +272,12 @@ association
 // --------------------------------------------------------
 
 methodDefinition
-    :   DEF wsOrNl* definedMethodName WS* methodParameterPart wsOrNl* bodyStatement wsOrNl* END
-    |   DEF wsOrNl* singletonObject wsOrNl* (DOT | COLON2) wsOrNl* definedMethodName WS* methodParameterPart wsOrNl* bodyStatement wsOrNl* END
+    :   DEF wsOrNl* methodNamePart WS* methodParameterPart wsOrNl* bodyStatement wsOrNl* END
+    ;
+
+methodNamePart
+    :   definedMethodName                                                                                           # simpleMethodNamePart
+    |   singletonObject wsOrNl* (DOT | COLON2) wsOrNl* definedMethodName                                            # singletonMethodNamePart
     ;
 
 singletonObject
@@ -327,7 +332,7 @@ optionalParameters
     ;
 
 optionalParameter
-    :   LOCAL_VARIABLE_IDENTIFIER EQ wsOrNl* expression
+    :   LOCAL_VARIABLE_IDENTIFIER WS* EQ wsOrNl* expression
     ;
 
 arrayParameter
@@ -513,12 +518,28 @@ literal
     :   numericLiteral
     |   symbol
     |   SINGLE_QUOTED_STRING_LITERAL
+    |   DOUBLE_QUOTED_STRING_START DOUBLE_QUOTED_STRING_CHARACTER_SEQUENCE? DOUBLE_QUOTED_STRING_END
     ;
 
 symbol
     :   SYMBOL_LITERAL
     |   COLON SINGLE_QUOTED_STRING_LITERAL
     ;
+
+// --------------------------------------------------------
+// String interpolation
+// --------------------------------------------------------
+
+stringInterpolation
+    :   DOUBLE_QUOTED_STRING_START
+        (DOUBLE_QUOTED_STRING_CHARACTER_SEQUENCE | interpolation)+
+        DOUBLE_QUOTED_STRING_END
+    ;
+
+interpolation
+    :   STRING_INTERPOLATION_BEGIN compoundStatement STRING_INTERPOLATION_END
+    ;
+
 
 // --------------------------------------------------------
 // Numerics

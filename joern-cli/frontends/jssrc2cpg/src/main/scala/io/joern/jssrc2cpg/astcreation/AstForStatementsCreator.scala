@@ -54,11 +54,12 @@ trait AstForStatementsCreator { this: AstCreator =>
     setArgumentIndices(blockStatementAsts)
     localAstParentStack.pop()
     scope.popScope()
-    Ast(blockNode).withChildren(blockStatementAsts)
+    blockAst(blockNode, blockStatementAsts)
   }
 
   protected def astForReturnStatement(ret: BabelNodeInfo): Ast = {
-    val retNode = createReturnNode(ret)
+    val retCode = ret.code.stripSuffix(";")
+    val retNode = returnNode(ret, retCode)
     safeObj(ret.json, "argument")
       .map { argument =>
         val argAst = astForNodeWithFunctionReference(Obj(argument))
@@ -186,7 +187,7 @@ trait AstForStatementsCreator { this: AstCreator =>
 
     val labelAsts = List(Ast(labeledNode), bodyAst)
     setArgumentIndices(labelAsts)
-    Ast(blockNode).withChildren(labelAsts)
+    blockAst(blockNode, labelAsts)
   }
 
   protected def astForBreakStatement(breakStmt: BabelNodeInfo): Ast = {
@@ -251,10 +252,13 @@ trait AstForStatementsCreator { this: AstCreator =>
   protected def astForSwitchStatement(switchStmt: BabelNodeInfo): Ast = {
     val switchNode = createControlStructureNode(switchStmt, ControlStructureTypes.SWITCH)
 
+    // The semantics of switch statement children is partially defined by there order value.
+    // The blockAst must have order == 2. Only to avoid collision we set switchExpressionAst to 1
+    // because the semantics of it is already indicated via the condition edge.
     val switchExpressionAst = astForNodeWithFunctionReference(switchStmt.json("discriminant"))
+    setOrderExplicitly(switchExpressionAst, 1)
 
-    val blockNode = createBlockNode(switchStmt)
-    val blockAst  = Ast(blockNode)
+    val blockNode = createBlockNode(switchStmt).order(2)
     scope.pushNewBlockScope(blockNode)
     localAstParentStack.push(blockNode)
 
@@ -264,15 +268,10 @@ trait AstForStatementsCreator { this: AstCreator =>
     scope.popScope()
     localAstParentStack.pop()
 
-    // The semantics of switch statement children is partially defined by there order value.
-    // The blockAst must have order == 2. Only to avoid collision we set switchExpressionAst to 1
-    // because the semantics of it is already indicated via the condition edge.
-    setOrderExplicitly(switchExpressionAst, 1)
-    setOrderExplicitly(blockAst, 2)
     Ast(switchNode)
       .withChild(switchExpressionAst)
       .withConditionEdge(switchNode, switchExpressionAst.nodes.head)
-      .withChild(blockAst.withChildren(casesAsts))
+      .withChild(blockAst(blockNode, casesAsts.toList))
   }
 
   /** De-sugaring from:
@@ -421,7 +420,9 @@ trait AstForStatementsCreator { this: AstCreator =>
     // while loop block:
     val bodyAst = astForNodeWithFunctionReference(forInOfStmt.json("body"))
 
-    val whileLoopBlockAst = Ast(whileLoopBlockNode).withChild(loopVariableAssignmentAst).withChild(bodyAst)
+    val whileLoopBlockChildren = List(loopVariableAssignmentAst, bodyAst)
+    setArgumentIndices(whileLoopBlockChildren)
+    val whileLoopBlockAst = blockAst(whileLoopBlockNode, whileLoopBlockChildren)
 
     scope.popScope()
     localAstParentStack.pop()
@@ -430,11 +431,10 @@ trait AstForStatementsCreator { this: AstCreator =>
     scope.popScope()
     localAstParentStack.pop()
 
-    Ast(blockNode)
-      .withChild(iteratorAssignmentAst)
-      .withChild(Ast(resultNode))
-      .withChild(Ast(loopVariableNode))
-      .withChild(whileLoopAst.withChild(whileLoopBlockAst))
+    val blockChildren =
+      List(iteratorAssignmentAst, Ast(resultNode), Ast(loopVariableNode), whileLoopAst.withChild(whileLoopBlockAst))
+    setArgumentIndices(blockChildren)
+    blockAst(blockNode, blockChildren)
   }
 
   /** De-sugaring from:
@@ -588,7 +588,7 @@ trait AstForStatementsCreator { this: AstCreator =>
 
     val whileLoopBlockChildren = loopVariableAssignmentAsts :+ bodyAst
     setArgumentIndices(whileLoopBlockChildren)
-    val whileLoopBlockAst = Ast(whileLoopBlockNode).withChildren(whileLoopBlockChildren)
+    val whileLoopBlockAst = blockAst(whileLoopBlockNode, whileLoopBlockChildren)
 
     scope.popScope()
     localAstParentStack.pop()
@@ -598,11 +598,11 @@ trait AstForStatementsCreator { this: AstCreator =>
     localAstParentStack.pop()
 
     val blockNodeChildren =
-      Seq(iteratorAssignmentAst, Ast(resultNode)) ++ loopVariableNodes.map(Ast(_)) :+ whileLoopAst.withChild(
+      List(iteratorAssignmentAst, Ast(resultNode)) ++ loopVariableNodes.map(Ast(_)) :+ whileLoopAst.withChild(
         whileLoopBlockAst
       )
     setArgumentIndices(blockNodeChildren)
-    Ast(blockNode).withChildren(blockNodeChildren)
+    blockAst(blockNode, blockNodeChildren)
   }
 
   /** De-sugaring from:
@@ -760,7 +760,7 @@ trait AstForStatementsCreator { this: AstCreator =>
 
     val whileLoopBlockChildren = loopVariableAssignmentAsts :+ bodyAst
     setArgumentIndices(whileLoopBlockChildren)
-    val whileLoopBlockAst = Ast(whileLoopBlockNode).withChildren(whileLoopBlockChildren)
+    val whileLoopBlockAst = blockAst(whileLoopBlockNode, whileLoopBlockChildren)
 
     scope.popScope()
     localAstParentStack.pop()
@@ -770,11 +770,11 @@ trait AstForStatementsCreator { this: AstCreator =>
     localAstParentStack.pop()
 
     val blockNodeChildren =
-      Seq(iteratorAssignmentAst, Ast(resultNode)) ++ loopVariableNodes.map(Ast(_)) :+ whileLoopAst.withChild(
+      List(iteratorAssignmentAst, Ast(resultNode)) ++ loopVariableNodes.map(Ast(_)) :+ whileLoopAst.withChild(
         whileLoopBlockAst
       )
     setArgumentIndices(blockNodeChildren)
-    Ast(blockNode).withChildren(blockNodeChildren)
+    blockAst(blockNode, blockNodeChildren)
   }
 
   protected def astForInOfStatement(forInOfStmt: BabelNodeInfo): Ast = {

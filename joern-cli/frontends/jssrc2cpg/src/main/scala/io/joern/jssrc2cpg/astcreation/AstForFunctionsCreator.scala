@@ -360,7 +360,6 @@ trait AstForFunctionsCreator { this: AstCreator =>
     val bodyJson                  = func.json("body")
     val bodyNodeInfo              = createBabelNodeInfo(bodyJson)
     val blockNode                 = createBlockNode(bodyNodeInfo)
-    val blockAst                  = Ast(blockNode)
     val additionalBlockStatements = mutable.ArrayBuffer.empty[Ast]
 
     val capturingRefNode =
@@ -385,11 +384,13 @@ trait AstForFunctionsCreator { this: AstCreator =>
             createBlockStatementAsts(bodyJson("body"))
           case _ =>
             // when body is just one expression like const foo = () => 42, generate a Return node
-            createReturnAst(createReturnNode(bodyNodeInfo), List(astForNodeWithFunctionReference(bodyJson))) :: Nil
+            val retCode = bodyNodeInfo.code.stripSuffix(";")
+            createReturnAst(returnNode(bodyNodeInfo, retCode), List(astForNodeWithFunctionReference(bodyJson))) :: Nil
         }
       case _ => createBlockStatementAsts(bodyJson("body"))
     }
-    setArgumentIndices(methodBlockContent ++ additionalBlockStatements.toList ++ bodyStmtAsts)
+    val methodBlockChildren = methodBlockContent ++ additionalBlockStatements.toList ++ bodyStmtAsts
+    setArgumentIndices(methodBlockChildren)
 
     val methodReturnNode = createMethodReturnNode(func)
 
@@ -410,7 +411,7 @@ trait AstForFunctionsCreator { this: AstCreator =>
       methodAstWithAnnotations(
         methodNode,
         (thisNode +: paramNodes).map(Ast(_)),
-        blockAst.withChildren(methodBlockContent ++ additionalBlockStatements ++ bodyStmtAsts),
+        blockAst(blockNode, methodBlockChildren),
         methodReturnNode,
         List(virtualModifierNode),
         astsForDecorators(func)

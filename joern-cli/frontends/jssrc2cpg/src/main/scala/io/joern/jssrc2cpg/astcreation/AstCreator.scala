@@ -9,6 +9,7 @@ import io.joern.jssrc2cpg.passes.Defines
 import io.joern.x2cpg.datastructures.Stack.{Stack, _}
 import io.joern.x2cpg.utils.NodeBuilders.methodReturnNode
 import io.joern.x2cpg.{Ast, AstCreatorBase}
+import io.joern.x2cpg.{AstNodeBuilder => X2CpgAstNodeBuilder}
 import io.shiftleft.codepropertygraph.generated.NodeTypes
 import io.shiftleft.codepropertygraph.generated.nodes.NewBlock
 import io.shiftleft.codepropertygraph.generated.nodes.NewFile
@@ -37,7 +38,8 @@ class AstCreator(
     with AstForTemplateDomCreator
     with AstNodeBuilder
     with TypeHelper
-    with AstCreatorHelper {
+    with AstCreatorHelper
+    with X2CpgAstNodeBuilder[BabelNodeInfo, AstCreator] {
 
   protected val logger: Logger = LoggerFactory.getLogger(classOf[AstCreator])
 
@@ -61,9 +63,6 @@ class AstCreator(
   // fails to deliver them at all -  strange, but this even happens with its latest version
   protected val (positionToLineNumberMapping, positionToFirstPositionInLineMapping) =
     positionLookupTables(parserResult.fileContent)
-
-  // we want to keep it local, just like the old js2cpg did
-  override def absolutePath(filename: String): String = filename
 
   override def createAst(): DiffGraphBuilder = {
     val fileNode       = NewFile().name(parserResult.filename).order(1)
@@ -123,7 +122,7 @@ class AstCreator(
     methodAstParentStack.pop()
 
     functionTypeAndTypeDeclAst.withChild(
-      methodAst(programMethod, List(Ast(thisParam)), Ast(blockNode).withChildren(methodChildren), methodReturn)
+      methodAst(programMethod, List(Ast(thisParam)), blockAst(blockNode, methodChildren), methodReturn)
     )
   }
 
@@ -243,4 +242,8 @@ class AstCreator(
 
   private def astsForProgram(program: BabelNodeInfo): List[Ast] = createBlockStatementAsts(program.json("body"))
 
+  protected def line(node: BabelNodeInfo): Option[Integer]      = node.lineNumber
+  protected def column(node: BabelNodeInfo): Option[Integer]    = node.columnNumber
+  protected def lineEnd(node: BabelNodeInfo): Option[Integer]   = node.lineNumberEnd
+  protected def columnEnd(node: BabelNodeInfo): Option[Integer] = node.columnNumberEnd
 }
