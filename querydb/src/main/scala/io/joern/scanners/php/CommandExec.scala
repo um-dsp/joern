@@ -27,8 +27,8 @@ object CommandExec extends QueryBundle {
       withStrRep({ cpg =>
         // $_REQUEST["foo"], $_GET["foo"], $_POST["foo"]
         // are identifier (at the moment)
-        def source =
-          cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST).*")
+     def source = 
+          cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
 
         def sink = cpg.call.name("shell_exec|exec|system|mail|popen|expect_popen|passthru|pcntl_exec|proc_opend|backticks").argument
 

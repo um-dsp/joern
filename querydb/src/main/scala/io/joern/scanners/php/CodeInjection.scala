@@ -27,8 +27,9 @@ object CodeInjection extends QueryBundle {
       withStrRep({ cpg =>
         // $_REQUEST["foo"], $_GET["foo"], $_POST["foo"]
         // are identifier (at the moment)
-        def source =
-          cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST).*")
+      def source = 
+          cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
+
         // extracts all eval, include and require statements and check that their arguments 
         // dynamically evaluated at runtime 
         // eval('Heloo')  X

@@ -27,8 +27,8 @@ object SQLInjection extends QueryBundle {
       withStrRep({ cpg =>
         // $_REQUEST["foo"], $_GET["foo"], $_POST["foo"]
         // are identifier (at the moment)
-        def source =
-          cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST).*")
+   def source = 
+          cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
 
         def sink = cpg.call.code(".*(mysql_query|mysqli_query|pg_query|sqlite_query|query).*").filter(_.receiver.nonEmpty).argument
 
