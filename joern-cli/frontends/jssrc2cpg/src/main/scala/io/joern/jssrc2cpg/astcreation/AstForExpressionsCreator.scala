@@ -41,6 +41,15 @@ trait AstForExpressionsCreator { this: AstCreator =>
         callExpr.lineNumber,
         callExpr.columnNumber
       )
+    // If the callee is a function itself, e.g. closure, then resolve this locally, if possible
+    callExpr.json.obj
+      .get("callee")
+      .map(createBabelNodeInfo)
+      .flatMap {
+        case callee if callee.node.isInstanceOf[FunctionLike] => functionNodeToNameAndFullName.get(callee)
+        case _                                                => None
+      }
+      .foreach { case (name, fullName) => callNode.name(name).methodFullName(fullName) }
     callAst(callNode, args, receiver = Option(receiverAst), base = Option(Ast(baseNode)))
   }
 
@@ -239,13 +248,19 @@ trait AstForExpressionsCreator { this: AstCreator =>
   }
 
   protected def astForCastExpression(castExpr: BabelNodeInfo): Ast = {
-    val op      = Operators.cast
+    val op = Operators.cast
+    val typ = typeFor(castExpr) match {
+      case t if GlobalBuiltins.builtins.contains(t) => s"__ecma.$t"
+      case t                                        => t
+    }
     val lhsNode = castExpr.json("typeAnnotation")
-    val lhsAst  = Ast(createLiteralNode(code(lhsNode), None, line(lhsNode), column(lhsNode)))
-    val rhsAst  = astForNodeWithFunctionReference(castExpr.json("expression"))
-
+    val lhsAst = Ast(
+      createLiteralNode(code(lhsNode), None, line(lhsNode), column(lhsNode)).dynamicTypeHintFullName(Seq(typ))
+    )
+    val rhsAst = astForNodeWithFunctionReference(castExpr.json("expression"))
     val callNode =
       createCallNode(castExpr.code, op, DispatchTypes.STATIC_DISPATCH, castExpr.lineNumber, castExpr.columnNumber)
+        .dynamicTypeHintFullName(Seq(typ))
     val argAsts = List(lhsAst, rhsAst)
     callAst(callNode, argAsts)
   }
