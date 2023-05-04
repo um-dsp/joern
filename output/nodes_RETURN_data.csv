@@ -124,10 +124,10 @@
 8408,RETURN,-1,,return false,,203,1
 8412,RETURN,-1,,"return array_shift($dvwaSession[""messages""])",,205,4
 8429,RETURN,-1,,return $messagesHtml,,215,5
-9192,RETURN,-1,,"return ""<a href=\"""" . $pLink . ""\"" target=\""_blank\"">"" . $pLink . ""</a>""",,462,1
-9201,RETURN,-1,,"return ""<a href=\"""" . $pLink . ""\"" target=\""_blank\"">"" . $text . ""</a>""",,465,1
-9216,RETURN,-1,,"return ""<input type=\""button\"" value=\""View Help\"" class=\""popup_button\"" id=\'help_button\' data-help-url=\'"" . DVWA_WEB_PAGE_TO_ROOT . encaps",,473,5
-9233,RETURN,-1,,"return ""<input type=\""button\"" value=\""View Source\"" class=\""popup_button\"" id=\'source_button\' data-source-url=\'"" . DVWA_WEB_PAGE_TO_ROOT . encaps",,479,3
+9192,RETURN,-1,,"return ""<a href="""" . $pLink . """" target=""_blank"">"" . $pLink . ""</a>""",,462,1
+9201,RETURN,-1,,"return ""<a href="""" . $pLink . """" target=""_blank"">"" . $text . ""</a>""",,465,1
+9216,RETURN,-1,,"return ""<input type=""button"" value=""View Help"" class=""popup_button"" id=\'help_button\' data-help-url=\'"" . DVWA_WEB_PAGE_TO_ROOT . encaps",,473,5
+9233,RETURN,-1,,"return ""<input type=""button"" value=""View Source"" class=""popup_button"" id=\'source_button\' data-source-url=\'"" . DVWA_WEB_PAGE_TO_ROOT . encaps",,479,3
 9452,RETURN,-1,,return $guestbook,,571,12
 9464,RETURN,-1,,return true,,581,1
 9500,RETURN,-1,,return encaps,,602,2

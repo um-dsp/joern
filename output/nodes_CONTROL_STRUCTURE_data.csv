@@ -89,7 +89,7 @@
 4954,CONTROL_STRUCTURE,-1,,"if (preg_match(""/^<[\\/]?+(\\w*)(?:[ ]*+"" . $this->regexHtmlAttribute . "")*+[ ]*+(\\/)?>/"",$Line[""text""],$matches))",,IF,836,6,<empty>
 4969,CONTROL_STRUCTURE,-1,,"if (in_array($element,$this->textLevelElements))",,IF,840,2,<empty>
 5005,CONTROL_STRUCTURE,-1,,"if (isset($Block[""closed""]) || isset($Block[""interrupted""]))",,IF,859,1,<empty>
-5030,CONTROL_STRUCTURE,-1,,"if (strpos($Line[""text""],""]"") !== false && preg_match(""/^\\[(.+?)\\]:[ ]*+<?(\\S+?)>?(?:[ ]+[\""\'(](.+)[\""\')])?[ ]*+$/"",$Line[""text""],$matches))",,IF,874,7,<empty>
+5030,CONTROL_STRUCTURE,-1,,"if (strpos($Line[""text""],""]"") !== false && preg_match(""/^\\[(.+?)\\]:[ ]*+<?(\\S+?)>?(?:[ ]+[""\'(](.+)[""\')])?[ ]*+$/"",$Line[""text""],$matches))",,IF,874,7,<empty>
 5095,CONTROL_STRUCTURE,-1,,"if (!isset($Block) || $Block[""type""] !== ""Paragraph"" || isset($Block[""interrupted""]))",,IF,899,26,<empty>
 5109,CONTROL_STRUCTURE,-1,,"if (strpos($Block[""element""][""handler""][""argument""],""|"") === false && strpos($Line[""text""],""|"") === false && strpos($Line[""text""],"":"") === false || strpos($Block[""element""][""handler""][""argument""],""\n"") !== false)",,IF,904,27,<empty>
 5155,CONTROL_STRUCTURE,-1,,"if (chop($Line[""text""],"" -:|"") !== """")",,IF,913,28,<empty>
@@ -127,7 +127,7 @@
 6102,CONTROL_STRUCTURE,-1,,"if (!isset($Excerpt[""text""][1]) || $Excerpt[""text""][1] !== ""["")",,IF,1355,6,<empty>
 6127,CONTROL_STRUCTURE,-1,,if ($Link === null),,IF,1364,9,<empty>
 6264,CONTROL_STRUCTURE,-1,,"if (preg_match(""/\\[((?:[^][]++|(?R))*+)\\]/"",$remainder,$matches))",,IF,1408,15,<empty>
-6283,CONTROL_STRUCTURE,-1,,"if (preg_match(""/^[(]\\s*+((?:[^ ()]++|[(][^ )]+[)])++)(?:[ ]+(\""[^\""]*+\""|\'[^\']*+\'))?\\s*+[)]/"",$remainder,$matches))",,IF,1421,16,<empty>
+6283,CONTROL_STRUCTURE,-1,,"if (preg_match(""/^[(]\\s*+((?:[^ ()]++|[(][^ )]+[)])++)(?:[ ]+(""[^""]*+""|\'[^\']*+\'))?\\s*+[)]/"",$remainder,$matches))",,IF,1421,16,<empty>
 6294,CONTROL_STRUCTURE,-1,,if (isset($matches[2])),,IF,1425,2,<empty>
 6315,CONTROL_STRUCTURE,-1,,"if (preg_match(""/^\\s*\\[(.*?)\\]/"",$remainder,$matches))",,IF,1434,1,<empty>
 6343,CONTROL_STRUCTURE,-1,,"if (!isset($this->DefinitionData[""Reference""][$definition]))",,IF,1446,2,<empty>

@@ -16,7 +16,7 @@ object ExecutionAfterRedirect extends QueryBundle {
   def ExecutionAfterRedirect()(implicit context: EngineContext): Query =
     Query.make(
       name = "php-ear-vulnerability",
-      author = Crew.niko,
+      author = Crew.dsp,
       title = "EAR  vulnerability.",
       description = """
           |Execution after redirect vulnerability.
