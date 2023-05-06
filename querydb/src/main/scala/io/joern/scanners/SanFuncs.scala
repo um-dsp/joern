@@ -1,7 +1,7 @@
 package io.joern.scanners
 
 object SanFuncs {
-  val san_functions_sql=Array( 
+  val san_functions_sql = List( 
     "addslashes",
     "dbx_escape_string",
     "db2_escape_string",
@@ -18,11 +18,11 @@ object SanFuncs {
     "sqlite_udf_encode_binary",
     "cubrid_real_escape_string")
 
-  val san_functions_xss=Array("htmlentities",
+  val san_functions_xss = List("htmlentities",
     "htmlspecialchars",
     "highlight_string")
 
-  val san_functions_all=Array("intval",
+  val san_functions_all = List("intval",
     "floatval",
     "doubleval",
     "filter_input",
@@ -91,12 +91,12 @@ object SanFuncs {
     "gethostbyname",
     "date", "ctype_digit")
   
-  val san_functions_code =Array()
+  val san_functions_code = List()
 
-  val san_functions_os_command =Array("escapeshellarg",
+  val san_functions_os_command  = List("escapeshellarg",
     "escapeshellcmd")
   
-  val san_functions_file= Array("basename",
+  val san_functions_file= List("basename",
     "dirname",
     "pathinfo")
 }

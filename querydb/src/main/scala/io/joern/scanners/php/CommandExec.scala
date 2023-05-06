@@ -38,7 +38,7 @@ object CommandExec extends QueryBundle {
      
       for (c <- path.head.elements.isCall.name) {if (SanFuncs.san_functions_os_command.contains(c) || SanFuncs.san_functions_all.contains(c))  {sanitized = true}}
 
-      if(!sanitized) {sink.reachableBy(source)}
+      if(!sanitized) {sink.reachableBy(source)} else {overflowdb.traversal.Traversal()}
       }),
 
       tags = List(QueryTags.remoteCodeExecution, QueryTags.default)

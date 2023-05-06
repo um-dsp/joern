@@ -39,7 +39,7 @@ object SQLInjection extends QueryBundle {
      
       for (c <- path.head.elements.isCall.name) {if (SanFuncs.san_functions_sql.contains(c) || SanFuncs.san_functions_all.contains(c))  {sanitized = true}}
 
-      if(!sanitized) {sink.reachableBy(source)}
+      if(!sanitized) {sink.reachableBy(source).l} else {overflowdb.traversal.Traversal()}
       }),
 
       tags = List(QueryTags.remoteCodeExecution, QueryTags.default)
