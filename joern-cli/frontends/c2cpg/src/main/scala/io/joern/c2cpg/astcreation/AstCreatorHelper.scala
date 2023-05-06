@@ -1,6 +1,7 @@
 package io.joern.c2cpg.astcreation
 
 import io.joern.c2cpg.datastructures.CGlobal
+import io.joern.c2cpg.parser.FileDefaults
 import io.shiftleft.codepropertygraph.generated.nodes.{ExpressionNew, NewNode}
 import io.shiftleft.codepropertygraph.generated.{DispatchTypes, Operators}
 import io.joern.x2cpg.Ast
@@ -17,8 +18,6 @@ import org.eclipse.cdt.internal.core.dom.parser.c.CASTArrayRangeDesignator
 import org.eclipse.cdt.internal.core.dom.parser.cpp.semantics.EvalBinding
 import org.eclipse.cdt.internal.core.dom.parser.cpp.{CPPASTIdExpression, CPPFunction}
 import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPASTArrayRangeDesignator
-import org.eclipse.cdt.internal.core.dom.parser.cpp.semantics.CPPEvaluation
-import org.eclipse.cdt.internal.core.dom.parser.cpp.semantics.EvalCompositeAccess
 import org.eclipse.cdt.internal.core.dom.parser.cpp.semantics.EvalMemberAccess
 import org.eclipse.cdt.internal.core.dom.parser.cpp.CPPASTFieldReference
 import org.eclipse.cdt.internal.core.model.ASTStringUtil
@@ -45,16 +44,36 @@ trait AstCreatorHelper { this: AstCreator =>
 
   import AstCreatorHelper._
 
-  private var usedNames: Int = 0
+  private var usedVariablePostfix: Int = 0
 
   private val IncludeKeyword = "include"
 
-  protected def uniqueName(target: String, name: String, fullName: String): (String, String) = {
+  protected def uniqueName(
+    target: String,
+    name: String,
+    fullName: String,
+    node: Option[IASTNode] = None
+  ): (String, String) = {
     if (name.isEmpty && (fullName.isEmpty || fullName.endsWith("."))) {
-      val newName     = s"anonymous_${target}_$usedNames"
-      val newFullName = s"${fullName}anonymous_${target}_$usedNames"
-      usedNames = usedNames + 1
-      (newName, newFullName)
+      val fromFilename = node.map(fileName).getOrElse(filename)
+      if (FileDefaults.isHeaderFile(fromFilename) && filename != fromFilename) {
+        CGlobal.synchronized {
+          val lineNumber        = node.flatMap(line).getOrElse(-1)
+          val columnNumber      = node.flatMap(column).getOrElse(-1)
+          val location          = s"$fromFilename:$lineNumber:$columnNumber"
+          val postfix           = CGlobal.headerFileFullNameToPostfix.getOrElse(location, CGlobal.usedVariablePostfix)
+          val name              = s"anonymous_${target}_$postfix"
+          val resultingFullName = s"$fullName$name"
+          CGlobal.usedVariablePostfix = CGlobal.usedVariablePostfix + 1
+          CGlobal.headerFileFullNameToPostfix.put(location, postfix)
+          (name, resultingFullName)
+        }
+      } else {
+        val name              = s"anonymous_${target}_$usedVariablePostfix"
+        val resultingFullName = s"$fullName$name"
+        usedVariablePostfix = usedVariablePostfix + 1
+        (name, resultingFullName)
+      }
     } else {
       (name, fullName)
     }
@@ -163,6 +182,8 @@ trait AstCreatorHelper { this: AstCreator =>
       }
     StringUtils.normalizeSpace(tpe) match {
       case "" => Defines.anyTypeName
+      case t if t.contains(" ->") && t.contains("}::") =>
+        fixQualifiedName(t.substring(t.indexOf("}::") + 3, t.indexOf(" ->")))
       case t if t.contains(" ->") =>
         fixQualifiedName(t.substring(0, t.indexOf(" ->")))
       case t if t.contains("?") => Defines.anyTypeName
@@ -305,7 +326,7 @@ trait AstCreatorHelper { this: AstCreator =>
       case namespace: ICPPASTNamespaceDefinition if ASTStringUtil.getSimpleName(namespace.getName).nonEmpty =>
         s"${fullName(namespace.getParent)}.${ASTStringUtil.getSimpleName(namespace.getName)}"
       case namespace: ICPPASTNamespaceDefinition if ASTStringUtil.getSimpleName(namespace.getName).isEmpty =>
-        s"${fullName(namespace.getParent)}.${uniqueName("namespace", "", "")._1}"
+        s"${fullName(namespace.getParent)}.${uniqueName("namespace", "", "", Some(node))._1}"
       case cppClass: ICPPASTCompositeTypeSpecifier if ASTStringUtil.getSimpleName(cppClass.getName).nonEmpty =>
         s"${fullName(cppClass.getParent)}.${ASTStringUtil.getSimpleName(cppClass.getName)}"
       case cppClass: ICPPASTCompositeTypeSpecifier if ASTStringUtil.getSimpleName(cppClass.getName).isEmpty =>
@@ -313,8 +334,8 @@ trait AstCreatorHelper { this: AstCreator =>
           case decl: IASTSimpleDeclaration =>
             decl.getDeclarators.headOption
               .map(n => ASTStringUtil.getSimpleName(n.getName))
-              .getOrElse(uniqueName("composite_type", "", "")._1)
-          case _ => uniqueName("composite_type", "", "")._1
+              .getOrElse(uniqueName("composite_type", "", "", Some(node))._1)
+          case _ => uniqueName("composite_type", "", "", Some(node))._1
         }
         s"${fullName(cppClass.getParent)}.$name"
       case enumSpecifier: IASTEnumerationSpecifier =>
@@ -420,7 +441,7 @@ trait AstCreatorHelper { this: AstCreator =>
 
   private def astForDecltypeSpecifier(decl: ICPPASTDecltypeSpecifier): Ast = {
     val op       = "<operator>.typeOf"
-    val cpgUnary = newCallNode(decl, op, op, DispatchTypes.STATIC_DISPATCH)
+    val cpgUnary = callNode(decl, nodeSignature(decl), op, op, DispatchTypes.STATIC_DISPATCH)
     val operand  = nullSafeAst(decl.getDecltypeExpression)
     callAst(cpgUnary, List(operand))
   }
@@ -430,10 +451,12 @@ trait AstCreatorHelper { this: AstCreator =>
     scope.pushNewScope(node)
     val op = Operators.assignment
     val calls = withIndex(d.getDesignators) { (des, o) =>
-      val callNode = newCallNode(d, op, op, DispatchTypes.STATIC_DISPATCH, o)
-      val left     = astForNode(des)
-      val right    = astForNode(d.getOperand)
-      callAst(callNode, List(left, right))
+      val callNode_ =
+        callNode(d, nodeSignature(d), op, op, DispatchTypes.STATIC_DISPATCH)
+          .argumentIndex(o)
+      val left  = astForNode(des)
+      val right = astForNode(d.getOperand)
+      callAst(callNode_, List(left, right))
     }
     scope.popScope()
     blockAst(node, calls.toList)
@@ -444,36 +467,39 @@ trait AstCreatorHelper { this: AstCreator =>
     scope.pushNewScope(node)
     val op = Operators.assignment
     val calls = withIndex(d.getDesignators) { (des, o) =>
-      val callNode = newCallNode(d, op, op, DispatchTypes.STATIC_DISPATCH, o)
-      val left     = astForNode(des)
-      val right    = astForNode(d.getOperand)
-      callAst(callNode, List(left, right))
+      val callNode_ =
+        callNode(d, nodeSignature(d), op, op, DispatchTypes.STATIC_DISPATCH)
+          .argumentIndex(o)
+      val left  = astForNode(des)
+      val right = astForNode(d.getOperand)
+      callAst(callNode_, List(left, right))
     }
     scope.popScope()
     blockAst(node, calls.toList)
   }
 
   private def astForCPPASTConstructorInitializer(c: ICPPASTConstructorInitializer): Ast = {
-    val name     = "<operator>.constructorInitializer"
-    val callNode = newCallNode(c, name, name, DispatchTypes.STATIC_DISPATCH)
-    val args     = c.getArguments.toList.map(a => astForNode(a))
-    callAst(callNode, args)
+    val name = "<operator>.constructorInitializer"
+    val callNode_ =
+      callNode(c, nodeSignature(c), name, name, DispatchTypes.STATIC_DISPATCH)
+    val args = c.getArguments.toList.map(a => astForNode(a))
+    callAst(callNode_, args)
   }
 
   private def astForCASTArrayRangeDesignator(des: CASTArrayRangeDesignator): Ast = {
     val op         = Operators.arrayInitializer
-    val callNode   = newCallNode(des, op, op, DispatchTypes.STATIC_DISPATCH)
+    val callNode_  = callNode(des, nodeSignature(des), op, op, DispatchTypes.STATIC_DISPATCH)
     val floorAst   = nullSafeAst(des.getRangeFloor)
     val ceilingAst = nullSafeAst(des.getRangeCeiling)
-    callAst(callNode, List(floorAst, ceilingAst))
+    callAst(callNode_, List(floorAst, ceilingAst))
   }
 
   private def astForCPPASTArrayRangeDesignator(des: CPPASTArrayRangeDesignator): Ast = {
     val op         = Operators.arrayInitializer
-    val callNode   = newCallNode(des, op, op, DispatchTypes.STATIC_DISPATCH)
+    val callNode_  = callNode(des, nodeSignature(des), op, op, DispatchTypes.STATIC_DISPATCH)
     val floorAst   = nullSafeAst(des.getRangeFloor)
     val ceilingAst = nullSafeAst(des.getRangeCeiling)
-    callAst(callNode, List(floorAst, ceilingAst))
+    callAst(callNode_, List(floorAst, ceilingAst))
   }
 
   protected def astForNode(node: IASTNode): Ast = {
