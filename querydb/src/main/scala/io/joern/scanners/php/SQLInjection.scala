@@ -29,7 +29,7 @@ object SQLInjection extends QueryBundle {
         // are identifier (at the moment)
       def source = cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
 
-      def sink = cpg.call.code(".*(mysql_query|mysqli_query|pg_query|sqlite_query|query).*").argument.l
+      def sink = cpg.call.name(".*(mysql_query|mysqli_query|pg_query|sqlite_query|query).*").argument
 	    // sink.reachableBy(source).l 
       // }),
 

@@ -30,7 +30,7 @@ object CodeInjection extends QueryBundle {
       def source = 
           cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
 
-      def sink = cpg.call.name("eval").argument.isIdentifier 
+      def sink = cpg.call.name("eval").argument 
 
 	    def path = sink.reachableByFlows(source)
 
