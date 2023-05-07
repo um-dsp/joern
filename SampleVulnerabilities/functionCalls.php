@@ -1,8 +1,10 @@
 <?php 
 
  function sayWelcome($a){
-    print 'Hello, welcome '. $a;
-
+    printStmt('Hello, welcome '. $a);
+}
+function printStmt($b){
+    print( intval($b));
 }
 if(isset($_GET['name'])){
     $param = $_GET['name'] ;
