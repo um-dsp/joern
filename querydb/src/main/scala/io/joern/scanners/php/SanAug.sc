@@ -9,13 +9,9 @@
    // Check whether identifier assigned to a call of a sanitization function
    // Modify SAN_SQL tag of the identifier accordingly
    // To-Do: check that identifier is 1st argument of assignment; add assignment and function call propagation
-   cpg.identifier.where(node => node.inAstMinusLeaf.isCall.name(".*assignment.*").argument(2)
-      .isCall.filter(node => san_functions_sql.contains(node.name) || san_functions_all.contains(node.name)))
-      .newTagNodePair("SAN_SQL", "TRUE").store 
+   cpg.identifier.where(node => node.inAstMinusLeaf.isCall.name(".*assignment.*").argument(2).isCall.filter(node => san_functions_sql.contains(node.name) || san_functions_all.contains(node.name))).newTagNodePair("SAN_SQL", "TRUE").store 
 
-   cpg.identifier.whereNot(_.inAstMinusLeaf.isCall.name(".*assignment.*").argument(2)
-      .isCall.filter(node => san_functions_sql.contains(node.name) || san_functions_all.contains(node.name)))
-      .newTagNodePair("SAN_SQL", "FALSE").store 
+   cpg.identifier.whereNot(_.inAstMinusLeaf.isCall.name(".*assignment.*").argument(2).isCall.filter(node => san_functions_sql.contains(node.name) || san_functions_all.contains(node.name))).newTagNodePair("SAN_SQL", "FALSE").store 
 
    run.commit
    
@@ -34,6 +30,26 @@
 
    cpg.identifier.repeat(_.astParent)(_.until(_.isCall.name(".*assignment.*"))).isCall.argument(1).isIdentifier.name.sideEffect(x=>println(x))
 
+   // ATA 
+   # Step one look for identifiers x = floatval(y) and set x to sanitized
+   def sanitized_vars = cpg.assignment.filter(_.code.contains("floatval")).argument(1).code.l 
+   # step 2 : go to all identifier with code x and set flag to sanitized
+   # as everytime we use x a new identifier is created for that use case
+   cpg.identifier.filter(node => sanitized_vars.contains(node.code)).newTagNodePair("SAN_SQL", "TRUE").store  
+   run.commit
+   # step 3 : go to all assignments of form z = x  and set their first argument to sanitized
+   cpg.assignment.where(_.argument(2).isIdentifier.tag.name("SAN_SQL")).argument(1).newTagNodePair("SAN_SQL", "TRUE").store  
+   run.commit
+   #step 4 :go to all assignment of form z = a+b+c+x and set z to sanitized
+   cpg.assignment.where(_.argument(2).isCall.argument.tag.name("SAN_SQL")).argument(1).newTagNodePair("SAN_SQL", "TRUE").store 
+   run.commit
+
+   ### NOTE in every step after run.commit 
+   ### run this cpg.identifier.tag.name("SAN_SQL").identifier.l
+   ### you shoud see the list getting bigger as more variables are set as 
+   ### sanitized
+   
+   
    def customFun(nodes: List[Identifier]): List[Identifier] = {
       for (var node: Identifier <- nodes) {
          node.repeat(_.astParent)(_.until(_.isCall.name(".*assignment.*"))).isCall.argument(1)
