@@ -1,0 +1,448 @@
+13,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+195,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+526,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+2526,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+2568,METHOD,<empty>,<empty>,<empty>,,,<empty>,Parsedown.<clinit>:void(),,false,,,<clinit>,20,void()
+2575,METHOD,<empty>,<empty>,Parsedown.<init>:<unresolvedSignature>(0),,,<empty>,Parsedown.<init>:<unresolvedSignature>(0),,false,,,<init>,21,<unresolvedSignature>(0)
+3349,METHOD,<empty>,<empty>,"function text(this,$text)",,,<empty>,Parsedown.text:<unresolvedSignature>(1),,false,24,,text,22,<unresolvedSignature>(1)
+3360,METHOD,<empty>,<empty>,"PROTECTED function textElements(this,$text)",,,<empty>,Parsedown.textElements:<unresolvedSignature>(1),,false,37,,textElements,23,<unresolvedSignature>(1)
+3391,METHOD,<empty>,<empty>,"function setBreaksEnabled(this,$breaksEnabled)",,,<empty>,Parsedown.setBreaksEnabled:<unresolvedSignature>(1),,false,59,,setBreaksEnabled,24,<unresolvedSignature>(1)
+3398,METHOD,<empty>,<empty>,"function setMarkupEscaped(this,$markupEscaped)",,,<empty>,Parsedown.setMarkupEscaped:<unresolvedSignature>(1),,false,68,,setMarkupEscaped,25,<unresolvedSignature>(1)
+3405,METHOD,<empty>,<empty>,"function setUrlsLinked(this,$urlsLinked)",,,<empty>,Parsedown.setUrlsLinked:<unresolvedSignature>(1),,false,77,,setUrlsLinked,26,<unresolvedSignature>(1)
+3412,METHOD,<empty>,<empty>,"function setSafeMode(this,$safeMode)",,,<empty>,Parsedown.setSafeMode:<unresolvedSignature>(1),,false,86,,setSafeMode,27,<unresolvedSignature>(1)
+3421,METHOD,<empty>,<empty>,"function setStrictMode(this,$strictMode)",,,<empty>,Parsedown.setStrictMode:<unresolvedSignature>(1),,false,95,,setStrictMode,28,<unresolvedSignature>(1)
+3430,METHOD,<empty>,<empty>,"PROTECTED function lines(this,$lines)",,,<empty>,Parsedown.lines:<unresolvedSignature>(1),,false,162,,lines,29,<unresolvedSignature>(1)
+3437,METHOD,<empty>,<empty>,"PROTECTED function linesElements(this,$lines)",,,<empty>,Parsedown.linesElements:<unresolvedSignature>(1),,false,167,,linesElements,30,<unresolvedSignature>(1)
+3721,METHOD,<empty>,<empty>,"PROTECTED function extractElement(this,$Component)",,,<empty>,Parsedown.extractElement:<unresolvedSignature>(1),,false,319,,extractElement,31,<unresolvedSignature>(1)
+3762,METHOD,<empty>,<empty>,"PROTECTED function isBlockContinuable(this,$Type)",,,<empty>,Parsedown.isBlockContinuable:<unresolvedSignature>(1),,false,336,,isBlockContinuable,32,<unresolvedSignature>(1)
+3772,METHOD,<empty>,<empty>,"PROTECTED function isBlockCompletable(this,$Type)",,,<empty>,Parsedown.isBlockCompletable:<unresolvedSignature>(1),,false,341,,isBlockCompletable,33,<unresolvedSignature>(1)
+3782,METHOD,<empty>,<empty>,"PROTECTED function blockCode(this,$Line,$Block)",,,<empty>,Parsedown.blockCode:<unresolvedSignature>(2),,false,349,,blockCode,34,<unresolvedSignature>(2)
+3837,METHOD,<empty>,<empty>,"PROTECTED function blockCodeContinue(this,$Line,$Block)",,,<empty>,Parsedown.blockCodeContinue:<unresolvedSignature>(2),,false,374,,blockCodeContinue,35,<unresolvedSignature>(2)
+3888,METHOD,<empty>,<empty>,"PROTECTED function blockCodeComplete(this,$Block)",,,<empty>,Parsedown.blockCodeComplete:<unresolvedSignature>(1),,false,395,,blockCodeComplete,36,<unresolvedSignature>(1)
+3894,METHOD,<empty>,<empty>,"PROTECTED function blockComment(this,$Line)",,,<empty>,Parsedown.blockComment:<unresolvedSignature>(1),,false,403,,blockComment,37,<unresolvedSignature>(1)
+3950,METHOD,<empty>,<empty>,"PROTECTED function blockCommentContinue(this,$Line,$Block)",,,<empty>,Parsedown.blockCommentContinue:<unresolvedSignature>(2),,false,428,,blockCommentContinue,38,<unresolvedSignature>(2)
+3987,METHOD,<empty>,<empty>,"PROTECTED function blockFencedCode(this,$Line)",,,<empty>,Parsedown.blockFencedCode:<unresolvedSignature>(1),,false,448,,blockFencedCode,39,<unresolvedSignature>(1)
+4073,METHOD,<empty>,<empty>,"PROTECTED function blockFencedCodeContinue(this,$Line,$Block)",,,<empty>,Parsedown.blockFencedCodeContinue:<unresolvedSignature>(2),,false,502,,blockFencedCodeContinue,40,<unresolvedSignature>(2)
+4156,METHOD,<empty>,<empty>,"PROTECTED function blockFencedCodeComplete(this,$Block)",,,<empty>,Parsedown.blockFencedCodeComplete:<unresolvedSignature>(1),,false,531,,blockFencedCodeComplete,41,<unresolvedSignature>(1)
+4162,METHOD,<empty>,<empty>,"PROTECTED function blockHeader(this,$Line)",,,<empty>,Parsedown.blockHeader:<unresolvedSignature>(1),,false,539,,blockHeader,42,<unresolvedSignature>(1)
+4228,METHOD,<empty>,<empty>,"PROTECTED function blockList(this,$Line,$CurrentBlock)",,,<empty>,Parsedown.blockList:<unresolvedSignature>(2),,false,574,,blockList,43,<unresolvedSignature>(2)
+4468,METHOD,<empty>,<empty>,"PROTECTED function blockListContinue(this,$Line,$Block)",,,<empty>,Parsedown.blockListContinue:<unresolvedSignature>(2),,false,643,,blockListContinue,44,<unresolvedSignature>(2)
+4707,METHOD,<empty>,<empty>,"PROTECTED function blockListComplete(this,$Block)",,,<empty>,Parsedown.blockListComplete:<unresolvedSignature>(1),,false,729,,blockListComplete,45,<unresolvedSignature>(1)
+4758,METHOD,<empty>,<empty>,"PROTECTED function blockQuote(this,$Line)",,,<empty>,Parsedown.blockQuote:<unresolvedSignature>(1),,false,748,,blockQuote,46,<unresolvedSignature>(1)
+4802,METHOD,<empty>,<empty>,"PROTECTED function blockQuoteContinue(this,$Line,$Block)",,,<empty>,Parsedown.blockQuoteContinue:<unresolvedSignature>(2),,false,767,,blockQuoteContinue,47,<unresolvedSignature>(2)
+4854,METHOD,<empty>,<empty>,"PROTECTED function blockRule(this,$Line)",,,<empty>,Parsedown.blockRule:<unresolvedSignature>(1),,false,792,,blockRule,48,<unresolvedSignature>(1)
+4892,METHOD,<empty>,<empty>,"PROTECTED function blockSetextHeader(this,$Line,$Block)",,,<empty>,Parsedown.blockSetextHeader:<unresolvedSignature>(2),,false,811,,blockSetextHeader,49,<unresolvedSignature>(2)
+4944,METHOD,<empty>,<empty>,"PROTECTED function blockMarkup(this,$Line)",,,<empty>,Parsedown.blockMarkup:<unresolvedSignature>(1),,false,829,,blockMarkup,50,<unresolvedSignature>(1)
+5002,METHOD,<empty>,<empty>,"PROTECTED function blockMarkupContinue(this,$Line,$Block)",,,<empty>,Parsedown.blockMarkupContinue:<unresolvedSignature>(2),,false,857,,blockMarkupContinue,51,<unresolvedSignature>(2)
+5027,METHOD,<empty>,<empty>,"PROTECTED function blockReference(this,$Line)",,,<empty>,Parsedown.blockReference:<unresolvedSignature>(1),,false,872,,blockReference,52,<unresolvedSignature>(1)
+5086,METHOD,<empty>,<empty>,"PROTECTED function blockTable(this,$Line,$Block)",,,<empty>,Parsedown.blockTable:<unresolvedSignature>(2),,false,897,,blockTable,53,<unresolvedSignature>(2)
+5394,METHOD,<empty>,<empty>,"PROTECTED function blockTableContinue(this,$Line,$Block)",,,<empty>,Parsedown.blockTableContinue:<unresolvedSignature>(2),,false,1020,,blockTableContinue,54,<unresolvedSignature>(2)
+5536,METHOD,<empty>,<empty>,"PROTECTED function paragraph(this,$Line)",,,<empty>,Parsedown.paragraph:<unresolvedSignature>(1),,false,1078,,paragraph,55,<unresolvedSignature>(1)
+5575,METHOD,<empty>,<empty>,"PROTECTED function paragraphContinue(this,$Line,$Block)",,,<empty>,Parsedown.paragraphContinue:<unresolvedSignature>(2),,false,1093,,paragraphContinue,56,<unresolvedSignature>(2)
+5598,METHOD,<empty>,<empty>,"PUBLIC function line(this,$text,$nonNestables)",,,<empty>,Parsedown.line:<unresolvedSignature>(2),,false,1130,,line,57,<unresolvedSignature>(2)
+5605,METHOD,<empty>,<empty>,"PROTECTED function lineElements(this,$text,$nonNestables)",,,<empty>,Parsedown.lineElements:<unresolvedSignature>(2),,false,1135,,lineElements,58,<unresolvedSignature>(2)
+5803,METHOD,<empty>,<empty>,"PROTECTED function inlineText(this,$text)",,,<empty>,Parsedown.inlineText:<unresolvedSignature>(1),,false,1239,,inlineText,59,<unresolvedSignature>(1)
+5852,METHOD,<empty>,<empty>,"PROTECTED function inlineCode(this,$Excerpt)",,,<empty>,Parsedown.inlineCode:<unresolvedSignature>(1),,false,1258,,inlineCode,60,<unresolvedSignature>(1)
+5905,METHOD,<empty>,<empty>,"PROTECTED function inlineEmailTag(this,$Excerpt)",,,<empty>,Parsedown.inlineEmailTag:<unresolvedSignature>(1),,false,1277,,inlineEmailTag,61,<unresolvedSignature>(1)
+5980,METHOD,<empty>,<empty>,"PROTECTED function inlineEmphasis(this,$Excerpt)",,,<empty>,Parsedown.inlineEmphasis:<unresolvedSignature>(1),,false,1307,,inlineEmphasis,62,<unresolvedSignature>(1)
+6062,METHOD,<empty>,<empty>,"PROTECTED function inlineEscapeSequence(this,$Excerpt)",,,<empty>,Parsedown.inlineEscapeSequence:<unresolvedSignature>(1),,false,1342,,inlineEscapeSequence,63,<unresolvedSignature>(1)
+6100,METHOD,<empty>,<empty>,"PROTECTED function inlineImage(this,$Excerpt)",,,<empty>,Parsedown.inlineImage:<unresolvedSignature>(1),,false,1353,,inlineImage,64,<unresolvedSignature>(1)
+6201,METHOD,<empty>,<empty>,"PROTECTED function inlineLink(this,$Excerpt)",,,<empty>,Parsedown.inlineLink:<unresolvedSignature>(1),,false,1388,,inlineLink,65,<unresolvedSignature>(1)
+6384,METHOD,<empty>,<empty>,"PROTECTED function inlineMarkup(this,$Excerpt)",,,<empty>,Parsedown.inlineMarkup:<unresolvedSignature>(1),,false,1463,,inlineMarkup,66,<unresolvedSignature>(1)
+6506,METHOD,<empty>,<empty>,"PROTECTED function inlineSpecialCharacter(this,$Excerpt)",,,<empty>,Parsedown.inlineSpecialCharacter:<unresolvedSignature>(1),,false,1495,,inlineSpecialCharacter,67,<unresolvedSignature>(1)
+6558,METHOD,<empty>,<empty>,"PROTECTED function inlineStrikethrough(this,$Excerpt)",,,<empty>,Parsedown.inlineStrikethrough:<unresolvedSignature>(1),,false,1509,,inlineStrikethrough,68,<unresolvedSignature>(1)
+6621,METHOD,<empty>,<empty>,"PROTECTED function inlineUrl(this,$Excerpt)",,,<empty>,Parsedown.inlineUrl:<unresolvedSignature>(1),,false,1532,,inlineUrl,69,<unresolvedSignature>(1)
+6710,METHOD,<empty>,<empty>,"PROTECTED function inlineUrlTag(this,$Excerpt)",,,<empty>,Parsedown.inlineUrlTag:<unresolvedSignature>(1),,false,1560,,inlineUrlTag,70,<unresolvedSignature>(1)
+6762,METHOD,<empty>,<empty>,"PROTECTED function unmarkedText(this,$text)",,,<empty>,Parsedown.unmarkedText:<unresolvedSignature>(1),,false,1581,,unmarkedText,71,<unresolvedSignature>(1)
+6772,METHOD,<empty>,<empty>,"PROTECTED function handle(this,$Element)",,,<empty>,Parsedown.handle:<unresolvedSignature>(1),,false,1591,,handle,72,<unresolvedSignature>(1)
+6841,METHOD,<empty>,<empty>,"PROTECTED function handleElementRecursive(this,$Element)",,,<empty>,Parsedown.handleElementRecursive:<unresolvedSignature>(1),,false,1627,,handleElementRecursive,73,<unresolvedSignature>(1)
+6856,METHOD,<empty>,<empty>,"PROTECTED function handleElementsRecursive(this,$Elements)",,,<empty>,Parsedown.handleElementsRecursive:<unresolvedSignature>(1),,false,1632,,handleElementsRecursive,74,<unresolvedSignature>(1)
+6871,METHOD,<empty>,<empty>,"PROTECTED function elementApplyRecursive(this,$closure,$Element)",,,<empty>,Parsedown.elementApplyRecursive:<unresolvedSignature>(2),,false,1637,,elementApplyRecursive,75,<unresolvedSignature>(2)
+6901,METHOD,<empty>,<empty>,"PROTECTED function elementApplyRecursiveDepthFirst(this,$closure,$Element)",,,<empty>,Parsedown.elementApplyRecursiveDepthFirst:<unresolvedSignature>(2),,false,1653,,elementApplyRecursiveDepthFirst,76,<unresolvedSignature>(2)
+6931,METHOD,<empty>,<empty>,"PROTECTED function elementsApplyRecursive(this,$closure,$Elements)",,,<empty>,Parsedown.elementsApplyRecursive:<unresolvedSignature>(2),,false,1669,,elementsApplyRecursive,77,<unresolvedSignature>(2)
+6958,METHOD,<empty>,<empty>,"PROTECTED function elementsApplyRecursiveDepthFirst(this,$closure,$Elements)",,,<empty>,Parsedown.elementsApplyRecursiveDepthFirst:<unresolvedSignature>(2),,false,1679,,elementsApplyRecursiveDepthFirst,78,<unresolvedSignature>(2)
+6985,METHOD,<empty>,<empty>,"PROTECTED function element(this,$Element)",,,<empty>,Parsedown.element:<unresolvedSignature>(1),,false,1689,,element,79,<unresolvedSignature>(1)
+7147,METHOD,<empty>,<empty>,"PROTECTED function elements(this,$Elements)",,,<empty>,Parsedown.elements:<unresolvedSignature>(1),,false,1773,,elements,80,<unresolvedSignature>(1)
+7204,METHOD,<empty>,<empty>,"PROTECTED function li(this,$lines)",,,<empty>,Parsedown.li:<unresolvedSignature>(1),,false,1803,,li,81,<unresolvedSignature>(1)
+7238,METHOD,<empty>,<empty>,"PROTECTED STATIC function pregReplaceElements($regexp,$Elements,$text)",,,<empty>,Parsedown.pregReplaceElements:<unresolvedSignature>(3),,false,1825,,pregReplaceElements,82,<unresolvedSignature>(3)
+7305,METHOD,<empty>,<empty>,"function parse(this,$text)",,,<empty>,Parsedown.parse:<unresolvedSignature>(1),,false,1854,,parse,83,<unresolvedSignature>(1)
+7311,METHOD,<empty>,<empty>,"PROTECTED function sanitiseElement(this,$Element)",,,<empty>,Parsedown.sanitiseElement:<unresolvedSignature>(1),,false,1861,,sanitiseElement,84,<unresolvedSignature>(1)
+7396,METHOD,<empty>,<empty>,"PROTECTED function filterUnsafeUrlInAttribute(this,$Element,$attribute)",,,<empty>,Parsedown.filterUnsafeUrlInAttribute:<unresolvedSignature>(2),,false,1900,,filterUnsafeUrlInAttribute,85,<unresolvedSignature>(2)
+7438,METHOD,<empty>,<empty>,"PROTECTED STATIC function escape($text,$allowQuotes)",,,<empty>,Parsedown.escape:<unresolvedSignature>(2),,false,1919,,escape,86,<unresolvedSignature>(2)
+7453,METHOD,<empty>,<empty>,"PROTECTED STATIC function striAtStart($string,$needle)",,,<empty>,Parsedown.striAtStart:<unresolvedSignature>(2),,false,1924,,striAtStart,87,<unresolvedSignature>(2)
+7475,METHOD,<empty>,<empty>,STATIC function instance($name),,,<empty>,Parsedown.instance:<unresolvedSignature>(1),,false,1938,,instance,88,<unresolvedSignature>(1)
+8005,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+8149,METHOD,<empty>,<empty>,function dvwaVersionGet(),,,<empty>,dvwaVersionGet:<unresolvedSignature>(0),,false,64,,dvwaVersionGet,15,<unresolvedSignature>(0)
+8154,METHOD,<empty>,<empty>,function dvwaReleaseDateGet(),,,<empty>,dvwaReleaseDateGet:<unresolvedSignature>(0),,false,69,,dvwaReleaseDateGet,16,<unresolvedSignature>(0)
+8159,METHOD,<empty>,<empty>,function dvwaSessionGrab(),,,<empty>,dvwaSessionGrab:<unresolvedSignature>(0),,false,76,,dvwaSessionGrab,17,<unresolvedSignature>(0)
+8177,METHOD,<empty>,<empty>,function dvwaPageStartup($pActions),,,<empty>,dvwaPageStartup:<unresolvedSignature>(1),,false,84,,dvwaPageStartup,18,<unresolvedSignature>(1)
+8194,METHOD,<empty>,<empty>,function dvwaLogin($pUsername),,,<empty>,dvwaLogin:<unresolvedSignature>(1),,false,92,,dvwaLogin,19,<unresolvedSignature>(1)
+8202,METHOD,<empty>,<empty>,function dvwaIsLoggedIn(),,,<empty>,dvwaIsLoggedIn:<unresolvedSignature>(0),,false,98,,dvwaIsLoggedIn,20,<unresolvedSignature>(0)
+8223,METHOD,<empty>,<empty>,function dvwaLogout(),,,<empty>,dvwaLogout:<unresolvedSignature>(0),,false,109,,dvwaLogout,21,<unresolvedSignature>(0)
+8231,METHOD,<empty>,<empty>,function dvwaPageReload(),,,<empty>,dvwaPageReload:<unresolvedSignature>(0),,false,115,,dvwaPageReload,22,<unresolvedSignature>(0)
+8237,METHOD,<empty>,<empty>,function dvwaCurrentUser(),,,<empty>,dvwaCurrentUser:<unresolvedSignature>(0),,false,119,,dvwaCurrentUser,23,<unresolvedSignature>(0)
+8250,METHOD,<empty>,<empty>,function dvwaPageNewGrab(),,,<empty>,dvwaPageNewGrab:<unresolvedSignature>(0),,false,126,,dvwaPageNewGrab,24,<unresolvedSignature>(0)
+8281,METHOD,<empty>,<empty>,function dvwaSecurityLevelGet(),,,<empty>,dvwaSecurityLevelGet:<unresolvedSignature>(0),,false,139,,dvwaSecurityLevelGet,25,<unresolvedSignature>(0)
+8305,METHOD,<empty>,<empty>,function dvwaSecurityLevelSet($pSecurityLevel),,,<empty>,dvwaSecurityLevelSet:<unresolvedSignature>(1),,false,158,,dvwaSecurityLevelSet,26,<unresolvedSignature>(1)
+8329,METHOD,<empty>,<empty>,function dvwaLocaleGet(),,,<empty>,dvwaLocaleGet:<unresolvedSignature>(0),,false,169,,dvwaLocaleGet,27,<unresolvedSignature>(0)
+8337,METHOD,<empty>,<empty>,function dvwaSQLiDBGet(),,,<empty>,dvwaSQLiDBGet:<unresolvedSignature>(0),,false,174,,dvwaSQLiDBGet,28,<unresolvedSignature>(0)
+8344,METHOD,<empty>,<empty>,function dvwaLocaleSet($pLocale),,,<empty>,dvwaLocaleSet:<unresolvedSignature>(1),,false,179,,dvwaLocaleSet,29,<unresolvedSignature>(1)
+8371,METHOD,<empty>,<empty>,function dvwaMessagePush($pMessage),,,<empty>,dvwaMessagePush:<unresolvedSignature>(1),,false,191,,dvwaMessagePush,30,<unresolvedSignature>(1)
+8392,METHOD,<empty>,<empty>,function dvwaMessagePop(),,,<empty>,dvwaMessagePop:<unresolvedSignature>(0),,false,200,,dvwaMessagePop,31,<unresolvedSignature>(0)
+8417,METHOD,<empty>,<empty>,function messagesPopAllToHtml(),,,<empty>,messagesPopAllToHtml:<unresolvedSignature>(0),,false,209,,messagesPopAllToHtml,32,<unresolvedSignature>(0)
+8431,METHOD,<empty>,<empty>,function dvwaHtmlEcho($pPage),,,<empty>,dvwaHtmlEcho:<unresolvedSignature>(1),,false,220,,dvwaHtmlEcho,33,<unresolvedSignature>(1)
+9125,METHOD,<empty>,<empty>,function dvwaHelpHtmlEcho($pPage),,,<empty>,dvwaHelpHtmlEcho:<unresolvedSignature>(1),,false,388,,dvwaHelpHtmlEcho,34,<unresolvedSignature>(1)
+9156,METHOD,<empty>,<empty>,function dvwaSourceHtmlEcho($pPage),,,<empty>,dvwaSourceHtmlEcho:<unresolvedSignature>(1),,false,424,,dvwaSourceHtmlEcho,35,<unresolvedSignature>(1)
+9187,METHOD,<empty>,<empty>,"function dvwaExternalLinkUrlGet($pLink,$text)",,,<empty>,dvwaExternalLinkUrlGet:<unresolvedSignature>(2),,false,460,,dvwaExternalLinkUrlGet,36,<unresolvedSignature>(2)
+9210,METHOD,<empty>,<empty>,function dvwaButtonHelpHtmlGet($pId),,,<empty>,dvwaButtonHelpHtmlGet:<unresolvedSignature>(1),,false,470,,dvwaButtonHelpHtmlGet,37,<unresolvedSignature>(1)
+9229,METHOD,<empty>,<empty>,function dvwaButtonSourceHtmlGet($pId),,,<empty>,dvwaButtonSourceHtmlGet:<unresolvedSignature>(1),,false,477,,dvwaButtonSourceHtmlGet,38,<unresolvedSignature>(1)
+9269,METHOD,<empty>,<empty>,function dvwaDatabaseConnect(),,,<empty>,dvwaDatabaseConnect:<unresolvedSignature>(0),,false,505,,dvwaDatabaseConnect,40,<unresolvedSignature>(0)
+9402,METHOD,<empty>,<empty>,function dvwaRedirect($pLocation),,,<empty>,dvwaRedirect:<unresolvedSignature>(1),,false,546,,dvwaRedirect,41,<unresolvedSignature>(1)
+9410,METHOD,<empty>,<empty>,function dvwaGuestbook(),,,<empty>,dvwaGuestbook:<unresolvedSignature>(0),,false,553,,dvwaGuestbook,42,<unresolvedSignature>(0)
+9454,METHOD,<empty>,<empty>,"function checkToken($user_token,$session_token,$returnURL)",,,<empty>,checkToken:<unresolvedSignature>(3),,false,577,,checkToken,43,<unresolvedSignature>(3)
+9478,METHOD,<empty>,<empty>,function generateSessionToken(),,,<empty>,generateSessionToken:<unresolvedSignature>(0),,false,590,,generateSessionToken,44,<unresolvedSignature>(0)
+9492,METHOD,<empty>,<empty>,function destroySessionToken(),,,<empty>,destroySessionToken:<unresolvedSignature>(0),,false,597,,destroySessionToken,45,<unresolvedSignature>(0)
+9498,METHOD,<empty>,<empty>,function tokenField(),,,<empty>,tokenField:<unresolvedSignature>(0),,false,601,,tokenField,46,<unresolvedSignature>(0)
+9782,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+9784,METHOD,<empty>,<empty>,"function recaptcha_check_answer($key,$response)",,,<empty>,recaptcha_check_answer:<unresolvedSignature>(2),,false,5,,recaptcha_check_answer,1,<unresolvedSignature>(2)
+9789,METHOD,<empty>,<empty>,"function CheckCaptcha($key,$response)",,,<empty>,CheckCaptcha:<unresolvedSignature>(2),,false,9,,CheckCaptcha,2,<unresolvedSignature>(2)
+9848,METHOD,<empty>,<empty>,function recaptcha_get_html($pubKey),,,<empty>,recaptcha_get_html:<unresolvedSignature>(1),,false,38,,recaptcha_get_html,3,<unresolvedSignature>(1)
+9866,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+9919,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+10064,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+10325,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+10530,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+10561,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+10639,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+10862,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+11053,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+11241,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+11340,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+11388,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+11482,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+11497,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+11512,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+11517,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+11532,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+11579,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+11757,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+12005,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+12251,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+12379,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+12498,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+12560,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+12809,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+13009,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+13231,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+13447,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+13610,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+13656,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+13770,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+13811,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+13848,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+13884,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+13913,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+13948,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+13976,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+14019,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+14223,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+14429,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+14577,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+14703,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+14851,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+14956,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+14998,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+15143,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+15251,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+15351,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+15406,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+15456,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+15493,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+15535,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+15615,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+15624,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+15668,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+15734,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+15823,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+15850,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+15878,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+15900,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+15934,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+16010,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+16209,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+16224,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+16231,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+16242,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+16257,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+16295,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+16400,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+16452,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+16523,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+16634,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+16664,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+16701,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+16765,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+16956,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+17074,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+17233,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+17389,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+17563,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+17712,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+17757,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+17814,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+17897,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+18168,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+18332,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+18469,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+18610,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+18712,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+18768,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+18928,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+19067,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+19219,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+19282,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+19377,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+19538,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+19810,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20027,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20070,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20168,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20220,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20266,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20304,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20321,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20373,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20485,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20512,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20517,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20529,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20557,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20599,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20728,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20769,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20806,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20840,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20868,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+20924,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+21115,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+21253,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+21372,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+21498,METHOD,<global>,<empty>,<empty>,,,<empty>,<global>,,false,,,<global>,1,
+21727,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.define,,true,,,define,0,
+21732,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,require_once,,true,,,require_once,0,
+21736,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.concat,,true,,,<operator>.concat,0,
+21741,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.fieldAccess,,true,,,<operator>.fieldAccess,0,
+21746,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.assignment,,true,,,<operator>.assignment,0,
+21751,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.indexAccess,,true,,,<operator>.indexAccess,0,
+21756,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.assignmentConcat,,true,,,<operator>.assignmentConcat,0,
+21761,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,dvwaExternalLinkUrlGet:<unresolvedSignature>(1),,true,,,dvwaExternalLinkUrlGet,0,
+21765,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.exit,,true,,,exit,0,
+21769,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.logicalNot,,true,,,<operator>.logicalNot,0,
+21773,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.defined,,true,,,defined,0,
+21777,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.errorSuppress,,true,,,<operator>.errorSuppress,0,
+21781,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,mysqli_connect:<unresolvedSignature>(5),,true,,,mysqli_connect,0,
+21789,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,mysqli_connect_errno:<unresolvedSignature>(0),,true,,,mysqli_connect_errno,0,
+21792,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,mysqli_connect_error:<unresolvedSignature>(0),,true,,,mysqli_connect_error,0,
+21795,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.equals,,true,,,<operator>.equals,0,
+21800,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,encaps,,true,,,encaps,0,
+21808,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,mysqli_query:<unresolvedSignature>(2),,true,,,mysqli_query,0,
+21813,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.conditional,,true,,,<operator>.conditional,0,
+21819,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.is_object,,true,,,is_object,0,
+21823,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,mysqli_error:<unresolvedSignature>(1),,true,,,mysqli_error,0,
+21827,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.cast,,true,,,<operator>.cast,0,
+21832,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.str_replace,,true,,,str_replace,0,
+21838,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.file_exists,,true,,,file_exists,0,
+21842,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.copy,,true,,,copy,0,
+21847,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.pg_connect,,true,,,pg_connect,0,
+21851,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.pg_query,,true,,,pg_query,0,
+21855,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.pg_last_error,,true,,,pg_last_error,0,
+21858,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.strpos,,true,,,strpos,0,
+21863,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.substr,,true,,,substr,0,
+21868,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.pg_close,,true,,,pg_close,0,
+21872,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,textElements,0,
+21878,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,elements,0,
+21884,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.trim,,true,,,trim,0,
+21888,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.explode,,true,,,explode,0,
+21893,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,linesElements,0,
+21899,METHOD,Iterator,TYPE_DECL,<empty>,,,<empty>,Iterator.current:<unresolvedSignature>(0),,true,,,current,0,<unresolvedSignature>(0)
+21904,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.is_null,,true,,,is_null,0,
+21908,METHOD,Iterator,TYPE_DECL,<empty>,,,<empty>,Iterator.next:void(),,true,,,next,0,void()
+21913,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.identical,,true,,,<operator>.identical,0,
+21918,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,chop:<unresolvedSignature>(1),,true,,,chop,0,
+21922,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.isset,,true,,,isset,0,
+21926,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.plus,,true,,,<operator>.plus,0,
+21931,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.notIdentical,,true,,,<operator>.notIdentical,0,
+21936,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.strstr,,true,,,strstr,0,
+21942,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.minus,,true,,,<operator>.minus,0,
+21946,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.modulo,,true,,,<operator>.modulo,0,
+21951,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.mb_strlen,,true,,,mb_strlen,0,
+21956,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.str_repeat,,true,,,str_repeat,0,
+21961,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.strlen,,true,,,strlen,0,
+21965,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.strspn,,true,,,strspn,0,
+21970,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.greaterThan,,true,,,<operator>.greaterThan,0,
+21975,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,$methodName,0,
+21981,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,isBlockCompletable,0,
+21987,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.emptyArrayIdx,,true,,,<operator>.emptyArrayIdx,0,
+21991,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,encaps,0,
+21997,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,extractElement,0,
+22003,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,isBlockContinuable,0,
+22009,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.logicalAnd,,true,,,<operator>.logicalAnd,0,
+22014,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,paragraphContinue,0,
+22021,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,paragraph,0,
+22027,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.method_exists,,true,,,method_exists,0,
+22032,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.greaterEqualsThan,,true,,,<operator>.greaterEqualsThan,0,
+22037,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.unset,,true,,,unset,0,
+22041,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.logicalOr,,true,,,<operator>.logicalOr,0,
+22046,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.lessThan,,true,,,<operator>.lessThan,0,
+22051,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.strcspn,,true,,,strcspn,0,
+22056,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,chop:<unresolvedSignature>(2),,true,,,chop,0,
+22061,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.list,,true,,,list,0,
+22066,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.lessEqualsThan,,true,,,<operator>.lessEqualsThan,0,
+22071,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.preg_match,,true,,,preg_match,0,
+22076,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.assignmentMinus,,true,,,<operator>.assignmentMinus,0,
+22081,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.preg_quote,,true,,,preg_quote,0,
+22086,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.elvis,,true,,,<operator>.elvis,0,
+22091,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.ltrim,,true,,,ltrim,0,
+22096,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.empty,,true,,,empty,0,
+22100,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,blockList,0,
+22106,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,blockReference,0,
+22112,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.preg_replace,,true,,,preg_replace,0,
+22118,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.addressOf,,true,,,<operator>.addressOf,0,
+22122,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.end,,true,,,end,0,
+22126,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.substr_count,,true,,,substr_count,0,
+22131,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.strtolower,,true,,,strtolower,0,
+22135,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.in_array,,true,,,in_array,0,
+22140,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.count,,true,,,count,0,
+22144,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.doubleArrow,,true,,,<operator>.doubleArrow,0,
+22149,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.preg_match_all,,true,,,preg_match_all,0,
+22155,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.array_slice,,true,,,array_slice,0,
+22161,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,lineElements,0,
+22168,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.array_combine,,true,,,array_combine,0,
+22173,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.strpbrk,,true,,,strpbrk,0,
+22178,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.array_merge,,true,,,array_merge,0,
+22183,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,inlineText,0,
+22189,METHOD,self,TYPE_DECL,<empty>,,,<empty>,self.pregReplaceElements:<unresolvedSignature>(3),,true,,,pregReplaceElements,0,
+22195,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,inlineLink,0,
+22201,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.assignmentPlus,,true,,,<operator>.assignmentPlus,0,
+22206,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,element,0,
+22212,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.is_string,,true,,,is_string,0,
+22216,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,$function,0,
+22223,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,handle,0,
+22229,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,elementApplyRecursive,0,
+22236,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,elementsApplyRecursive,0,
+22243,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.call_user_func,,true,,,call_user_func,0,
+22248,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,elementsApplyRecursiveDepthFirst,0,
+22255,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,elementApplyRecursiveDepthFirst,0,
+22262,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,sanitiseElement,0,
+22268,METHOD,self,TYPE_DECL,<empty>,,,<empty>,self.escape:<unresolvedSignature>(1),,true,,,escape,0,
+22272,METHOD,self,TYPE_DECL,<empty>,,,<empty>,self.escape:<unresolvedSignature>(2),,true,,,escape,0,
+22277,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,text,0,
+22283,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,filterUnsafeUrlInAttribute,0,
+22290,METHOD,self,TYPE_DECL,<empty>,,,<empty>,self.striAtStart:<unresolvedSignature>(2),,true,,,striAtStart,0,
+22295,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.htmlspecialchars,,true,,,htmlspecialchars,0,
+22299,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.alloc,,true,,,<operator>.alloc,0,
+22302,METHOD,static,TYPE_DECL,<empty>,,,<empty>,static.<init>:<unresolvedSignature>(0),,true,,,<init>,0,<unresolvedSignature>(0)
+22307,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.parse_url,,true,,,parse_url,0,
+22312,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.session_set_cookie_params,,true,,,session_set_cookie_params,0,
+22316,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.session_start,,true,,,session_start,0,
+22319,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.array_key_exists,,true,,,array_key_exists,0,
+22324,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,global,,true,,,global,0,
+22328,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.setcookie,,true,,,setcookie,0,
+22333,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.array_shift,,true,,,array_shift,0,
+22337,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,Header:<unresolvedSignature>(1),,true,,,Header,0,
+22341,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,echo,,true,,,echo,0,
+22345,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.strip_tags,,true,,,strip_tags,0,
+22349,METHOD,PDO,TYPE_DECL,<empty>,,,<empty>,PDO.<init>:<unresolvedSignature>(3),,true,,,<init>,0,<unresolvedSignature>(3)
+22357,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,setAttribute,0,
+22364,METHOD,SQLite3,TYPE_DECL,<empty>,,,<empty>,SQLite3.<init>:<unresolvedSignature>(1),,true,,,<init>,0,<unresolvedSignature>(1)
+22370,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,enableExceptions,0,
+22376,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,session_commit:<unresolvedSignature>(0),,true,,,session_commit,0,
+22379,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.header,,true,,,header,0,
+22383,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,mysqli_fetch_row:<unresolvedSignature>(1),,true,,,mysqli_fetch_row,0,
+22387,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.md5,,true,,,md5,0,
+22391,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.uniqid,,true,,,uniqid,0,
+22394,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.realpath,,true,,,realpath,0,
+22398,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.getcwd,,true,,,getcwd,0,
+22401,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.ini_get,,true,,,ini_get,0,
+22405,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.extension_loaded,,true,,,extension_loaded,0,
+22409,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.function_exists,,true,,,function_exists,0,
+22413,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.notEquals,,true,,,<operator>.notEquals,0,
+22418,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.get_current_user,,true,,,get_current_user,0,
+22421,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.is_writable,,true,,,is_writable,0,
+22425,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.strtoupper,,true,,,strtoupper,0,
+22429,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.urlencode,,true,,,urlencode,0,
+22433,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.http_build_query,,true,,,http_build_query,0,
+22437,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.stream_context_create,,true,,,stream_context_create,0,
+22441,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.file_get_contents,,true,,,file_get_contents,0,
+22445,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.json_decode,,true,,,json_decode,0,
+22450,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.base64_decode,,true,,,base64_decode,0,
+22454,METHOD,ParseDown,TYPE_DECL,<empty>,,,<empty>,ParseDown.<init>:<unresolvedSignature>(0),,true,,,<init>,0,<unresolvedSignature>(0)
+22459,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.array_keys,,true,,,array_keys,0,
+22463,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.stripslashes,,true,,,stripslashes,0,
+22467,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,mysqli_real_escape_string:<unresolvedSignature>(2),,true,,,mysqli_real_escape_string,0,
+22472,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.trigger_error,,true,,,trigger_error,0,
+22477,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,mysqli_num_rows:<unresolvedSignature>(1),,true,,,mysqli_num_rows,0,
+22481,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.phpinfo,,true,,,phpinfo,0,
+22484,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.ucfirst,,true,,,ucfirst,0,
+22488,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,include_once,,true,,,include_once,0,
+22492,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.phpversion,,true,,,phpversion,0,
+22495,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.print,,true,,,print,0,
+22499,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.json_encode,,true,,,json_encode,0,
+22503,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.http_response_code,,true,,,http_response_code,0,
+22507,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,mysqli_fetch_assoc:<unresolvedSignature>(1),,true,,,mysqli_fetch_assoc,0,
+22511,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.sleep,,true,,,sleep,0,
+22515,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.rand,,true,,,rand,0,
+22520,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,mysqli_close:<unresolvedSignature>(1),,true,,,mysqli_close,0,
+22524,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,prepare,0,
+22530,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,bindParam,0,
+22538,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,execute,0,
+22543,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,fetch,0,
+22548,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,rowCount,0,
+22553,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.strtotime,,true,,,strtotime,0,
+22557,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.multiplication,,true,,,<operator>.multiplication,0,
+22562,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.time,,true,,,time,0,
+22565,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.stripos,,true,,,stripos,0,
+22570,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.stristr,,true,,,stristr,0,
+22575,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.php_uname,,true,,,php_uname,0,
+22579,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.shell_exec,,true,,,shell_exec,0,
+22583,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.is_numeric,,true,,,is_numeric,0,
+22587,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,sizeof:<unresolvedSignature>(1),,true,,,sizeof,0,
+22591,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,include,,true,,,include,0,
+22595,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.fnmatch,,true,,,fnmatch,0,
+22600,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.str_rot13,,true,,,str_rot13,0,
+22604,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.strrev,,true,,,strrev,0,
+22608,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.hash,,true,,,hash,0,
+22613,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.intval,,true,,,intval,0,
+22617,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<operator>.postIncrement,,true,,,<operator>.postIncrement,0,
+22621,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,query,0,
+22627,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,getMessage,0,
+22632,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,fetchArray,0,
+22637,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,lastErrorMsg,0,
+22642,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,bindValue,0,
+22650,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,finalize,0,
+22655,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,<empty>,,true,,,numColumns,0,
+22660,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,mssql_connect:<unresolvedSignature>(3),,true,,,mssql_connect,0,
+22666,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,mssql_select_db:<unresolvedSignature>(1),,true,,,mssql_select_db,0,
+22670,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,mssql_query:<unresolvedSignature>(1),,true,,,mssql_query,0,
+22674,METHOD,<global>,NAMESPACE_BLOCK,<empty>,,,<empty>,mssql_fetch_array:<unresolvedSignature>(1),,true,,,mssql_fetch_array,0,
+22678,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.basename,,true,,,basename,0,
+22682,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.strrpos,,true,,,strrpos,0,
+22687,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.getimagesize,,true,,,getimagesize,0,
+22691,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.move_uploaded_file,,true,,,move_uploaded_file,0,
+22696,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.sys_get_temp_dir,,true,,,sys_get_temp_dir,0,
+22699,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.imagecreatefromjpeg,,true,,,imagecreatefromjpeg,0,
+22703,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.imagejpeg,,true,,,imagejpeg,0,
+22709,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.imagecreatefrompng,,true,,,imagecreatefrompng,0,
+22713,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.imagepng,,true,,,imagepng,0,
+22719,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.imagedestroy,,true,,,imagedestroy,0,
+22723,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.rename,,true,,,rename,0,
+22728,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.unlink,,true,,,unlink,0,
+22732,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.ob_start,,true,,,ob_start,0,
+22735,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.eval,,true,,,eval,0,
+22739,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.ob_get_contents,,true,,,ob_get_contents,0,
+22742,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.ob_end_clean,,true,,,ob_end_clean,0,
+22745,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.highlight_string,,true,,,highlight_string,0,
+22750,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.sha1,,true,,,sha1,0,
+22754,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.mt_rand,,true,,,mt_rand,0,
+22757,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.htmlentities,,true,,,htmlentities,0,
+22761,METHOD,__builtin,TYPE_DECL,<empty>,,,<empty>,__builtin.addslashes,,true,,,addslashes,0,

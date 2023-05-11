@@ -8,32 +8,40 @@ import io.joern.scanners._
 import io.shiftleft.codepropertygraph.generated.Operators
 import io.shiftleft.semanticcpg.language._
 
-object ShellExec extends QueryBundle {
+object XSS extends QueryBundle {
 
   implicit val resolver: ICallResolver = NoResolve
 
   @q
-  def shellExec()(implicit context: EngineContext): Query =
+  def XSS()(implicit context: EngineContext): Query =
     Query.make(
-      name = "shell-exec",
+      name = "php-xss",
       author = Crew.niko,
-      title = "Shell exec: A parameter is used in an insecure `shell-exec` call.",
+      title = "Cross site scripting vulnerability.",
       description = """
-          |An attacker controlled parameter is used in an insecure `shell-exec` call.
+          |An attacker controlled parameter is used in an insecure echo | print  call.
           |
           |If the parameter is not validated and sanitized, this is a remote code execution.
           |""".stripMargin,
-      score = 5,
+      score = 10,
       withStrRep({ cpg =>
         // $_REQUEST["foo"], $_GET["foo"], $_POST["foo"]
         // are identifier (at the moment)
-        def source =
-          cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST).*")
 
-        def sink = cpg.call.name("shell_exec").argument
+      def source = 
+          cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
 
-        sink.reachableBy(source).l
-      }),
+
+        def sink = cpg.call.name("print|echo|printf")
+
+
+
+
+ def result = sink.repeat(sink => sink.method.callIn)(_.until(_.argument.reachableByFlows(source)))
+
+  result  
+  
+  }),
       tags = List(QueryTags.remoteCodeExecution, QueryTags.default)
-    )
-}
+    
+)}
