@@ -38,36 +38,6 @@
       }
    }
    
-   println("SQL-Sanitized Identifiers: " + cpg.identifier.filter(isSanitized).name.dedup.l)
-   println("SQL-Unsanitized Identifiers: " + cpg.identifier.filterNot(isSanitized).name.dedup.l)
-
-   //Check if sink reachable by source via function calls
-   sink.repeat(_.method.callIn.argument)(_.until(_.reachableBy(source))).l 
-
-   // ATA 
-   # Step one look for identifiers x = floatval(y) and set x to sanitized
-   def sanitized_vars = cpg.assignment.filter(_.code.contains("floatval")).argument(1).code.l 
-   # step 2 : go to all identifier with code x and set flag to sanitized
-   # as everytime we use x a new identifier is created for that use case
-   cpg.identifier.filter(node => sanitized_vars.contains(node.code)).newTagNodePair("SAN_SQL", "TRUE").store  
-   run.commit
-   # step 3 : go to all assignments of form z = x  and set their first argument to sanitized
-   cpg.assignment.where(_.argument(2).isIdentifier.tag.name("SAN_SQL")).argument(1).newTagNodePair("SAN_SQL", "TRUE").store  
-   run.commit
-   #step 4 :go to all assignment of form z = a+b+c+x and set z to sanitized
-   cpg.assignment.where(_.argument(2).isCall.argument.tag.name("SAN_SQL")).argument(1).newTagNodePair("SAN_SQL", "TRUE").store 
-   run.commit
-
-   ### NOTE in every step after run.commit 
-   ### run this cpg.identifier.tag.name("SAN_SQL").identifier.l
-   ### you shoud see the list getting bigger as more variables are set as 
-   ### sanitized
-   
-   
-   def customFun(nodes: List[Identifier]): List[Identifier] = {
-      for (var node: Identifier <- nodes) {
-         node.repeat(_.astParent)(_.until(_.isCall.name(".*assignment.*"))).isCall.argument(1)
-         .isIdentifier.name.filter(_==node.name)
-      }
-   }
+   // println("SQL-Sanitized Identifiers: " + cpg.identifier.filter(isSanitized).name.dedup.l)
+   // println("SQL-Unsanitized Identifiers: " + cpg.identifier.filterNot(isSanitized).name.dedup.l)
 }
