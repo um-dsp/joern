@@ -25,23 +25,15 @@ object SQLInjection extends QueryBundle {
           |""".stripMargin,
       score = 11,
       withStrRep({ cpg =>
-        // $_REQUEST["foo"], $_GET["foo"], $_POST["foo"]
-        // are identifier (at the moment)
+        
       def source = cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
 
-      def sink = cpg.call.name(".*(mysql_query|mysqli_query|pg_query|sqlite_query|query).*").argument
-	    // sink.reachableBy(source).l 
-      // }),
+      def sink = cpg.call.name(".*(mysql_query|mysqli_query|pg_query|sqlite_query|query).*").argument.filterNot(isSanitized)
+	    
+      sink.reachableBy(source).l ::: sink.repeat(_.method.callIn.argument.filterNot(isSanitized))(_.until(_.reachableBy(source))).l
 
-      def path = sink.reachableByFlows(source)
-
-      var sanitized = false
-     
-      for (c <- path.head.elements.isCall.name) {if (SanFuncs.san_functions_sql.contains(c) || SanFuncs.san_functions_all.contains(c))  {sanitized = true}}
-
-      if(!sanitized) {sink.reachableBy(source).l} else {overflowdb.traversal.Traversal()}
       }),
 
-      tags = List(QueryTags.remoteCodeExecution, QueryTags.default)
+      tags = List(QueryTags.sqlInjection, QueryTags.default)
       )
 }

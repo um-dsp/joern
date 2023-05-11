@@ -18,8 +18,7 @@
       case func: Call => san_functions.contains(func.name) || isSanitized(func.argument)
       case identifier: Identifier => {
          val definingNode = {
-            // if identifier never used ddgIn returns empty, so directly check astParent
-            if (identifier.ddgIn.isEmpty) identifier.astParent.assignment.argument(2)
+            if (identifier.ddgIn.isEmpty) identifier.astParent.assignment.argument(2) 
             else identifier.ddgIn.astParent.assignment.argument(2)
          }
          !definingNode.isEmpty && isSanitized(definingNode)
