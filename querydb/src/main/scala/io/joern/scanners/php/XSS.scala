@@ -28,20 +28,12 @@ object XSS extends QueryBundle {
         // $_REQUEST["foo"], $_GET["foo"], $_POST["foo"]
         // are identifier (at the moment)
 
-      def source = 
-          cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
+      def source = cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
 
+      def sink = cpg.call.name("print|echo|printf").argument.filterNot(isSanitized)
 
-        def sink = cpg.call.name("print|echo|printf")
-
-
-
-
- def result = sink.repeat(sink => sink.method.callIn)(_.until(_.argument.reachableByFlows(source)))
-
-  result  
-  
-  }),
+      sink.reachableBy(source).l ::: sink.repeat(_.method.callIn.argument.filterNot(isSanitized))(_.until(_.reachableBy(source))).l
+      }),
       tags = List(QueryTags.remoteCodeExecution, QueryTags.default)
     
 )}

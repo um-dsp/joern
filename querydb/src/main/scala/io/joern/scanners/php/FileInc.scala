@@ -27,20 +27,12 @@ object FileInclusion extends QueryBundle {
       withStrRep({ cpg =>
         // $_REQUEST["foo"], $_GET["foo"], $_POST["foo"]
         // are identifier (at the moment)
-      def source = 
-          cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
+	    def source = cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
 
-      def sink = cpg.call.code(".*(include|require|include_once|require_once).*").argument
+      def sink = cpg.call.code(".*(include|require|include_once|require_once).*").argument.filterNot(isSanitized)
 
-	    def path = sink.reachableByFlows(source)
-
-      var sanitized = false
-     
-      for (c <- path.head.elements.isCall.name) {if (SanFuncs.san_functions_file.contains(c) || SanFuncs.san_functions_all.contains(c))  {sanitized = true}}
-
-      if(!sanitized) {sink.reachableBy(source)} else {overflowdb.traversal.Traversal()}
+      sink.reachableBy(source).l ::: sink.repeat(_.method.callIn.argument.filterNot(isSanitized))(_.until(_.reachableBy(source))).l
       }),
-
       tags = List(QueryTags.remoteCodeExecution, QueryTags.default)
     )
 }
