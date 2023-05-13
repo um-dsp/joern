@@ -89,7 +89,8 @@ object SanFuncs {
     "gethostname",
     "gethostbynamel",
     "gethostbyname",
-    "date", "ctype_digit")
+    "date", "ctype_digit",
+    "int", "float", "double", "char")
   
   val san_functions_code = List()
 

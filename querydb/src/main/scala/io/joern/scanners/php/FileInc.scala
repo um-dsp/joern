@@ -29,9 +29,9 @@ object FileInclusion extends QueryBundle {
         // are identifier (at the moment)
 	    def source = cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
 
-      def sink = cpg.call.code(".*(include|require|include_once|require_once).*").argument.filterNot(isSanitized)
+      def sink = cpg.call.code(".*(include|require|include_once|require_once).*").argument.filterNot(SanitizationFilter.isSanitized)
 
-      sink.reachableBy(source).l ::: sink.repeat(_.method.callIn.argument.filterNot(isSanitized))(_.until(_.reachableBy(source))).l
+      sink.reachableBy(source).l ::: sink.repeat(_.method.callIn.argument.filterNot(SanitizationFilter.isSanitized))(_.until(_.reachableBy(source))).l
       }),
       tags = List(QueryTags.remoteCodeExecution, QueryTags.default)
     )
