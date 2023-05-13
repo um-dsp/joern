@@ -25,11 +25,14 @@ object SQLInjection extends QueryBundle {
           |""".stripMargin,
       score = 11,
       withStrRep({ cpg =>
-        
+      
+      SanitizationFilter.set_san_functions(SanFuncs.san_functions_sql)
+
       def source = cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
 
       def sink = cpg.call.name(".*(mysql_query|mysqli_query|pg_query|sqlite_query|query).*").argument.filterNot(SanitizationFilter.isSanitized)
 	    
+      
       sink.reachableBy(source).l ::: sink.repeat(_.method.callIn.argument.filterNot(SanitizationFilter.isSanitized))(_.until(_.reachableBy(source))).l
 
       }),

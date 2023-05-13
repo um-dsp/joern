@@ -31,7 +31,8 @@ object ExecutionAfterRedirect extends QueryBundle {
 
         def sink = cpg.call("header").filter(_.code.contains("Location")).argument
 
-        sink.reachableBy(source).l 
+      sink.reachableBy(source).l ::: sink.repeat(_.method.callIn.argument.filterNot(SanitizationFilter.isSanitized))(_.until(_.reachableBy(source))).l
+
       }),
       tags = List(QueryTags.remoteCodeExecution, QueryTags.default)
     )

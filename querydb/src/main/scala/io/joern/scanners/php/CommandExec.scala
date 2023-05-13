@@ -27,6 +27,9 @@ object CommandExec extends QueryBundle {
       withStrRep({ cpg =>
         // $_REQUEST["foo"], $_GET["foo"], $_POST["foo"]
         // are identifier (at the moment)
+
+        SanitizationFilter.set_san_functions(SanFuncs.san_functions_os_command)
+
       def source = 
           cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
 

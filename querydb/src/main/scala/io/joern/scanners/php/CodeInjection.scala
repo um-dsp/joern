@@ -27,13 +27,19 @@ object CodeInjection extends QueryBundle {
       withStrRep({ cpg =>
         // $_REQUEST["foo"], $_GET["foo"], $_POST["foo"]
         // are identifier (at the moment)
+
+      SanitizationFilter.set_san_functions(SanFuncs.san_functions_code)
+
       def source = 
           cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
 
-      def sink = cpg.call.name("eval").argument.filterNot(SanitizationFilter.isSanitized)
+      def sink = cpg.call.name("eval").argument 
+
 
       sink.reachableBy(source).l ::: sink.repeat(_.method.callIn.argument.filterNot(SanitizationFilter.isSanitized))(_.until(_.reachableBy(source))).l
+
       }),
+
       tags = List(QueryTags.remoteCodeExecution, QueryTags.default)
     )
 }
