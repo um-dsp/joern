@@ -32,7 +32,7 @@ object CodeInjection extends QueryBundle {
 
       def source = cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
 
-      def sink = cpg.call.name("eval").argument 
+      def sink = cpg.call.name("eval").argument.filterNot(SanitizationFilter.isSanitized)
 
       sink.reachableBy(source).l ::: sink.repeat(_.method.callIn.argument.filterNot(SanitizationFilter.isSanitized))(_.until(_.reachableBy(source))).l
 

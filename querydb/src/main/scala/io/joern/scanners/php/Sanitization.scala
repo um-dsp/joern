@@ -55,7 +55,7 @@ object SanitizationFilter {
             // used variable will have ddgIn periodically pointing to its last usage
             
             else {
-               identifier.repeat(_.ddgIn.isIdentifier.name(identifier.name))(_.until(_.astParent.isCallTo("settype|<operator>.assignment").argument(1).isIdentifier.name(identifier.name))).astParent.isCall.argument(2)
+               identifier.repeat(_.ddgIn.isIdentifier.name(identifier.name))(_.until(_.astParent.isCallTo("settype|<operator>.assignment").argument(1).isIdentifier.name(identifier.name)))
             }
          }
          !definingNode.isEmpty && isSanitized(definingNode)(san_functions_specific)
