@@ -13,15 +13,7 @@ object SanitizationFilter {
    implicit val resolver: ICallResolver = NoResolve
    // implicit val attack_san_functions: List[String] = SanFuncs.san_functions_sql
    val safe_types: List[String] = List("int", "integer", "bool", "boolean", "float", "double")
-
-   def isSafeTypeCast(arg: Any): Boolean = arg match {
-      case func: Call => (func.name == "<operator>.cast" && safe_types.contains(func.typeFullName))
-      case _ => {
-         // println(arg)
-         false
-      }
-   }
-
+   
    // Check whether given CPG Node is sanitized, filter accordingly
    def isSanitized(arg: Any)(implicit san_functions_specific: List[String]): Boolean = arg match {
       case traversal: overflowdb.traversal.Traversal[_] => isSanitized(traversal.l)(san_functions_specific)
@@ -30,7 +22,7 @@ object SanitizationFilter {
       case literal: Literal => true
       case func: Call => SanFuncs.san_functions_all.contains(func.name) || 
                            san_functions_specific.contains(func.name) || 
-                           isSafeTypeCast(func) ||
+                           (func.name == "<operator>.cast" && safe_types.contains(func.typeFullName)) ||
                            isSanitized(func.argument)(san_functions_specific) || 
                            {
                               if (!func.callee.ast.isReturn.astChildren.isEmpty) 
