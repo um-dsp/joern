@@ -26,7 +26,7 @@ object SQLInjection extends QueryBundle {
       score = 11,
       withStrRep({ cpg =>
       
-      SanitizationFilter.set_san_functions(SanFuncs.san_functions_sql)
+      implicit val attack_san_functions: List[String] = SanFuncs.san_functions_sql
 
       def source = cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
 
