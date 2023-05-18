@@ -26,9 +26,9 @@ object SQLInjection extends QueryBundle {
       score = 11,
       withStrRep({ cpg =>
       
-      implicit val attack_san_functions: List[String] = SanFuncs.san_functions_sql
+      implicit val attack_san_functions: List[String] = Constants.san_functions_sql
 
-      def source = cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
+      def source = cpg.call.name(Operators.assignment).argument.code(Constants.attacker_input) 
 
       def sink = cpg.call.name(".*(mysql_query|mysqli_query|pg_query|sqlite_query|query).*").argument.filterNot(SanitizationFilter.isSanitized)
 	    

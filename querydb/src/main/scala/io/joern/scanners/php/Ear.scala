@@ -28,7 +28,7 @@ object ExecutionAfterRedirect extends QueryBundle {
         // are identifier (at the moment)
       implicit val attack_san_functions: List[String] = List()
 
-      def source = cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
+      def source = cpg.call.name(Operators.assignment).argument.code(Constants.attacker_input) 
 
       def sink = cpg.call("header").filter(_.code.contains("Location")).argument.filterNot(SanitizationFilter.isSanitized)
 

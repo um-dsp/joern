@@ -28,9 +28,9 @@ object CommandExec extends QueryBundle {
         // $_REQUEST["foo"], $_GET["foo"], $_POST["foo"]
         // are identifier (at the moment)
 
-      implicit val attack_san_functions: List[String] = SanFuncs.san_functions_os_command
+      implicit val attack_san_functions: List[String] = Constants.san_functions_os_command
 
-      def source = cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
+      def source = cpg.call.name(Operators.assignment).argument.code(Constants.attacker_input) 
 
       def sink = cpg.call.name("shell_exec|exec|system|mail|popen|expect_popen|passthru|pcntl_exec|proc_opend|backticks").argument.filterNot(SanitizationFilter.isSanitized)
 

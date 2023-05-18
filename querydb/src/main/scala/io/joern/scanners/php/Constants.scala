@@ -1,6 +1,9 @@
-package io.joern.scanners
+package io.joern.scanners.php
 
-object SanFuncs {
+object Constants {
+
+  val attacker_input: String = ".*(_GET|_POST|_COOKIE|_REQUEST|_ENV|HTTP_ENV_VARS|HTTP_POST_VARS|HTTP_GET_VARS).*"
+
   val san_functions_sql = List( 
     "addslashes",
     "dbx_escape_string",

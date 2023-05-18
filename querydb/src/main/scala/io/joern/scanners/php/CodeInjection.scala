@@ -28,9 +28,9 @@ object CodeInjection extends QueryBundle {
         // $_REQUEST["foo"], $_GET["foo"], $_POST["foo"]
         // are identifier (at the moment)
 
-      implicit val attack_san_functions: List[String] = SanFuncs.san_functions_code
+      implicit val attack_san_functions: List[String] = Constants.san_functions_code
 
-      def source = cpg.call.name(Operators.assignment).argument.code(".*_(REQUEST|GET|POST|ENV|COOKIE|SERVER).*") 
+      def source = cpg.call.name(Operators.assignment).argument.code(Constants.attacker_input) 
 
       def sink = cpg.call.name("eval").argument.filterNot(SanitizationFilter.isSanitized)
 
