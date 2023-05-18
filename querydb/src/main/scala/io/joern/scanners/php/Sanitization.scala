@@ -11,7 +11,7 @@ import io.shiftleft.semanticcpg.language._
 
 object SanitizationFilter {
    implicit val resolver: ICallResolver = NoResolve
-   // implicit val attack_san_functions: List[String] = SanFuncs.san_functions_sql
+   // implicit val attack_san_functions: List[String] = Constants.san_functions_sql
    val safe_types: List[String] = List("int", "integer", "bool", "boolean", "float", "double")
    
    // Check whether given CPG Node is sanitized, filter accordingly
@@ -20,7 +20,7 @@ object SanitizationFilter {
       case List() => true
       case listOfNodes: List[_] => listOfNodes.map(isSanitized(_)(san_functions_specific)).reduce((x,y) => x && y)
       case literal: Literal => true
-      case func: Call => SanFuncs.san_functions_all.contains(func.name) || 
+      case func: Call => Constants.san_functions_all.contains(func.name) || 
                            san_functions_specific.contains(func.name) || 
                            (func.name == "<operator>.cast" && safe_types.contains(func.typeFullName)) ||
                            isSanitized(func.argument)(san_functions_specific) || 
