@@ -1,4 +1,5 @@
 <?php
+/*
 // Literals
 $san0 = 0;
 $san1 = 2.3;
@@ -53,11 +54,13 @@ function customSan2nd($p1, $p2) {
 $san11 = customSan2nd($san3, $unsan2);
 $unsan9 = customSan2nd($unsan1, $unsan2);
 $unsan10 = customSan2nd($unsan1, $san2);
+*/
 
 // Functions (by reference)
 function customSanRef(&$p1) {
     filter_input($p1);
 }
-$san11 = $unsan10;
+//$san11= $unsan10;
+$san11 = $_GET['input'];
 customSanRef($san11);
 ?>

@@ -26,6 +26,8 @@ object SanitizationFilter {
       }
    }
 
+
+
    // Check whether given CPG Node is sanitized, filter accordingly
    def isSanitized(node: Any, sanitizedParameters: List[Boolean] = List())(implicit san_functions_specific: List[String]): Boolean = node match {
       case traversal: overflowdb.traversal.Traversal[_] => isSanitized(traversal.l, sanitizedParameters)(san_functions_specific)
@@ -39,13 +41,29 @@ object SanitizationFilter {
             // identifier coming from method parameter is unsanitized
             if (identifier.method.parameter.name.l.contains(identifier.name) && identifier.astParent.assignment.argument(1).isIdentifier.name(identifier.name).isEmpty) 
                identifier.method.parameter.name(identifier.name)
+
             // identifier used as argument of settype with a safe type will be sanitized
             else if (!identifier.astParent.isCallTo("settype").isEmpty && safe_types.contains(identifier.astParent.isCallTo("settype").argument(2).code.l.head.replaceAll("\"","")) ){
                identifier.astParent.isCallTo("settype").argument(2)
             }
+
             // CfgNode assigning a variable will have ddgIn pointing to the value of the assignment
             else if (!identifier.ddgIn.astParent.assignment.argument(1).isIdentifier.name(identifier.name).isEmpty) {
                identifier.ddgIn.astParent.assignment.argument(2)
+            }
+
+            //identifier used by reference to a method
+            // if identifier is found as methodParamIn with a By_REFERENCE Evaluation strategy
+            if(identifier.parameter.filter(_.evaluationStrategy =="BY_REFERENCE").isEmpty ==false){
+              
+               param_by_ref = identifier.parameter.filter(_.evaluationStrategy =="BY_REFERENCE")
+               method = param_by_ref.method
+               
+               // check if there is a call (SAN) to san function and that 
+               // (SAN) argument is the BY_REFERENCE argument
+               method.ast.isCall.filter(node => Constants.san_functions_all.contains(node.name)|| san_functions_specific.contains(node.name))
+               .isIdentifier.name.l == param_by_ref.name.l
+
             }
             // empty ddgIn edge
             // assigned but never used variables don't have ddgIn edge
