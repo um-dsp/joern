@@ -22,7 +22,8 @@ import io.joern.x2cpg.utils.NodeBuilders.{
 import java.util.UUID.randomUUID
 import org.jetbrains.kotlin.psi._
 import org.jetbrains.kotlin.lexer.{KtToken, KtTokens}
-import io.shiftleft.semanticcpg.language._
+import overflowdb.traversal.iterableToTraversal
+
 import scala.annotation.unused
 import scala.jdk.CollectionConverters._
 
@@ -36,7 +37,7 @@ trait KtPsiToAst {
     val importAsts       = importDirectives.toList.map(astForImportDirective)
     val namespaceBlocksForImports =
       for {
-        node <- importAsts.flatMap(_.root.iterator.collectAll[NewImport])
+        node <- importAsts.flatMap(_.root.collectAll[NewImport])
         name = getName(node)
       } yield Ast(namespaceBlockNode(name, name, relativizedPath))
 
@@ -204,7 +205,7 @@ trait KtPsiToAst {
     typeInfoProvider: TypeInfoProvider
   ): Seq[Ast] = {
     val className = ctx match {
-      case Some(c) => "anonymous_obj"
+      case Some(_) => "anonymous_obj"
       case None    => ktClass.getName
     }
 
@@ -289,18 +290,17 @@ trait KtPsiToAst {
         componentNMethodAsts(typeDecl, ktClass.getPrimaryConstructor.getValueParameters.asScala.toSeq)
       case _ => Seq()
     }
-    val componentNBindingsInfo =
-      _componentNMethodAsts.flatMap(_.root.iterator.collectAll[NewMethod]).map { methodNode =>
-        val node = newBindingNode(methodNode.name, methodNode.signature, methodNode.fullName)
-        BindingInfo(node, List((typeDecl, node, EdgeTypes.BINDS), (node, methodNode, EdgeTypes.REF)))
-      }
+    val componentNBindingsInfo = _componentNMethodAsts.flatMap(_.root.collectAll[NewMethod]).map { methodNode =>
+      val node = newBindingNode(methodNode.name, methodNode.signature, methodNode.fullName)
+      BindingInfo(node, List((typeDecl, node, EdgeTypes.BINDS), (node, methodNode, EdgeTypes.REF)))
+    }
 
     val classDeclarations = Option(ktClass.getBody)
       .map(_.getDeclarations.asScala.filterNot(_.isInstanceOf[KtNamedFunction]))
       .getOrElse(List())
     val memberAsts = classDeclarations.toSeq.map(astForMember)
     val innerTypeDeclAsts =
-      classDeclarations.iterator
+      classDeclarations.toSeq
         .collectAll[KtClassOrObject]
         .filterNot(typeInfoProvider.isCompanionObject)
         .map(astsForDeclaration(_))
@@ -312,7 +312,7 @@ trait KtPsiToAst {
     val methodAsts = classFunctions.toSeq.flatMap { classFn =>
       astsForMethod(classFn, needsThisParameter = true, withVirtualModifier = true)
     }
-    val bindingsInfo = methodAsts.flatMap(_.root.iterator.collectAll[NewMethod]).map { _methodNode =>
+    val bindingsInfo = methodAsts.flatMap(_.root.collectAll[NewMethod]).map { _methodNode =>
       val node = newBindingNode(_methodNode.name, _methodNode.signature, _methodNode.fullName)
       BindingInfo(node, List((typeDecl, node, EdgeTypes.BINDS), (node, _methodNode, EdgeTypes.REF)))
     }
@@ -1655,7 +1655,7 @@ trait KtPsiToAst {
       val typeFullName = registerType(
         typeInfoProvider.expressionType(expr.getDelegateExpressionOrInitializer, Defines.UnresolvedNamespace)
       )
-      val rhsAst = Ast(operatorCallNode(Operators.alloc, Operators.alloc, Option(typeFullName)))
+      val rhsAst = Ast(operatorCallNode(Operators.alloc, Operators.alloc, None))
 
       val identifier    = identifierNode(elem, elem.getText, elem.getText, node.typeFullName)
       val identifierAst = astWithRefEdgeMaybe(identifier.name, identifier)
@@ -1886,8 +1886,7 @@ trait KtPsiToAst {
           scope.addToScope(tmpName, node)
           val localAst = Ast(node)
 
-          val typeFullName = registerType(typeInfoProvider.expressionType(objectLiteral, Defines.UnresolvedNamespace))
-          val rhsAst       = Ast(operatorCallNode(Operators.alloc, Operators.alloc, Option(typeFullName)))
+          val rhsAst = Ast(operatorCallNode(Operators.alloc, Operators.alloc, None))
 
           val identifier    = identifierNode(objectLiteral, node.name, node.code, node.typeFullName)
           val identifierAst = astWithRefEdgeMaybe(identifier.name, identifier)
@@ -1896,7 +1895,7 @@ trait KtPsiToAst {
             operatorCallNode(Operators.assignment, s"${identifier.name} = <alloc>", None, line(expr), column(expr))
           val assignmentCallAst = callAst(assignmentNode, List(identifierAst) ++ List(rhsAst))
           val initSignature     = s"<${TypeConstants.void}>()"
-          val initFullName      = s"$typeFullName${TypeConstants.initPrefix}:$initSignature"
+          val initFullName      = s"$typeDeclFullName.<init>:$initSignature"
           val initCallNode = callNode(
             objectLiteral,
             Constants.init,
@@ -1923,8 +1922,12 @@ trait KtPsiToAst {
 
       arg match {
         case _ if arg.getArgumentExpression.isInstanceOf[KtObjectLiteralExpression] =>
-          val tmpName       = s"tmp_obj_$objLiteralExpressionIdxCounter"
-          val identifier    = identifierNode(expr, tmpName, tmpName, TypeConstants.any)
+          val tmpName = s"tmp_obj_$objLiteralExpressionIdxCounter"
+          val typeFullName = scope.lookupVariable(tmpName) match {
+            case Some(l: NewLocal) => l.typeFullName
+            case _                 => TypeConstants.any
+          }
+          val identifier    = identifierNode(expr, tmpName, tmpName, typeFullName)
           val identifierAst = astWithRefEdgeMaybe(identifier.name, identifier)
           objLiteralExpressionIdxCounter += 1
           Seq(identifierAst)
