@@ -1,0 +1,11 @@
+geccBBlite 1.0
+
+per installare geccBBlite 1.0 crea un database
+e poi edita il file database.php con i parametri
+del tuo database, uploada tutto nel tuo ftp e
+poi lancia install.php.
+
+controlla le prossime release al sito
+http://sourceforge.net/projects/geccnuke/
+
+se hai bisogno scrivimi a gecco@napodano.co

@@ -1,0 +1,50 @@
+body
+{
+	background-color: #FFFFFF;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-style: normal;
+	font-size: 11px;
+	color: #000000;
+}
+
+a:hover
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	color: #FFFFFF;
+	background-color: #000000;
+}
+
+a
+{
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-weight: bold;
+	color: #000000;
+}
+
+td
+{
+	vertical-align: top;
+}
+
+hr
+{
+	border-bottom-width: thin;
+	border-bottom-style: solid;
+	border-bottom-color: #222222;
+}
+
+image a
+{
+	text-decoration: none;
+	border: none;
+}
+
+.cornice
+{
+	border: thin solid #000000;
+}
+
+#cornice
+{
+ 	border: thin solid #000000;
+}
