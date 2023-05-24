@@ -28,12 +28,11 @@ object SQLInjection extends QueryBundle {
       
       implicit val attack_san_functions: List[String] = Constants.san_functions_sql
 
-      def source = cpg.call.name(Operators.assignment).argument.code(Constants.attacker_input) 
+      def source = cpg.call.name(Operators.assignment).ast.isIdentifier.name(Constants.attacker_input)  
 
-      def sink = cpg.call.name(".*(mysql_query|mysqli_query|pg_query|sqlite_query|query).*").argument.filterNot(SanitizationFilter.isSanitized)
+      def sink = cpg.call.name(".*(mysql_query|mysqli_query|pg_query|sqlite_query|query).*").argument.filterNot(SanitizationFilter.isSanitized(_))
 	    
-      
-      sink.reachableBy(source).l ::: sink.repeat(_.method.callIn.argument.filterNot(SanitizationFilter.isSanitized))(_.until(_.reachableBy(source))).l
+      sink.reachableBy(source).l ::: sink.repeat(_.method.callIn.argument.filterNot(SanitizationFilter.isSanitized(_)))(_.until(_.reachableBy(source))).l
 
       }),
 

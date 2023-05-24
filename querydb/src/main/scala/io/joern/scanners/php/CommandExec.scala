@@ -32,9 +32,10 @@ object CommandExec extends QueryBundle {
 
       def source = cpg.call.name(Operators.assignment).argument.code(Constants.attacker_input) 
 
-      def sink = cpg.call.name("shell_exec|exec|system|mail|popen|expect_popen|passthru|pcntl_exec|proc_opend|backticks").argument.filterNot(SanitizationFilter.isSanitized)
+      def sink = cpg.call.name("shell_exec|exec|system|mail|popen|expect_popen|passthru|pcntl_exec|proc_opend|backticks").argument.filterNot(SanitizationFilter.isSanitized(_))
+	    
+      sink.reachableBy(source).l ::: sink.repeat(_.method.callIn.argument.filterNot(SanitizationFilter.isSanitized(_)))(_.until(_.reachableBy(source))).l
 
-      sink.reachableBy(source).l ::: sink.repeat(_.method.callIn.argument.filterNot(SanitizationFilter.isSanitized))(_.until(_.reachableBy(source))).l
       }),
 
       tags = List(QueryTags.remoteCodeExecution, QueryTags.default)
