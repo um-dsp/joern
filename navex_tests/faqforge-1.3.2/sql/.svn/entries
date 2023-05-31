@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="3"
+   name=""
+   committed-date="2006-02-22T10:09:01.779138Z"
+   url="https://svn.sourceforge.net/svnroot/faqforge/sql"
+   last-author="sgrayban"
+   kind="dir"
+   uuid="44278816-5d0d-0410-bbbe-869db509db7b"
+   repos="https://svn.sourceforge.net/svnroot/faqforge"
+   revision="18"/>
+<entry
+   committed-rev="2"
+   name="mysql"
+   text-time="2006-02-22T10:01:14.000000Z"
+   committed-date="2006-02-22T10:01:14.189501Z"
+   checksum="d41d8cd98f00b204e9800998ecf8427e"
+   last-author="sgrayban"
+   kind="file"
+   prop-time="2006-06-27T19:28:04.000000Z"/>
+<entry
+   committed-rev="3"
+   name="faqforge.sql"
+   text-time="2006-02-22T10:09:01.000000Z"
+   committed-date="2006-02-22T10:09:01.779138Z"
+   checksum="5a4c1d49ec12282629a3417f6ab4c921"
+   last-author="sgrayban"
+   kind="file"
+   prop-time="2006-06-27T19:28:04.000000Z"/>
+<entry
+   committed-rev="2"
+   name="index.php"
+   text-time="2006-02-22T10:01:14.000000Z"
+   committed-date="2006-02-22T10:01:14.189501Z"
+   checksum="792aa40fe5cdf372eee1c03982574ff0"
+   last-author="sgrayban"
+   kind="file"
+   prop-time="2006-06-27T19:28:04.000000Z"/>
+</wc-entries>

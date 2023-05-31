@@ -1,0 +1,41 @@
+$Id: INSTALL 2 2006-02-22 10:01:14Z sgrayban $
+
+FaqForge install
+
+
+tar -zxf faqforge-version.tar.gz 
+cd faqforge 
+cd sql 
+mysqladmin -p create faqforge 
+
+mysql -p faqforge < faqforge.sql 
+ 
+Edit lib/faqforge-config.inc 
+
+     **** Make sure you change all the fields for the Mysql access correctly
+     Then edit the following:
+    
+     * $defaultTopic = "faqforge";
+       Should be set to what ever your main topic is.
+       Example: 
+       If your main topic is at
+       http://www.YOUR-DOMAIN.com/faqforge/?context=View+Document&helpContext=dk-filter+Quick+HOWTO
+       then your $defaultTopic would be dk-filter+Quick+HOWTO
+
+     * $defaultwebTitle = "HOWTO's List";
+       This is what your default Webpage title and topic list title will be for the public pages.
+       
+Edit admin/admin-config.php
+
+     * Edit the first 2 defines ONLY for your username and password
+       DO NOT TOUCH the 3rd define or you will break the login
+ 
+Now goto your web browser and goto http://www.YOUR-DOMAIN.com/faqforge/admin/
+site and login using the username/password you used put in admin/admin-config.php
+
+Enjoy !!
+ 
+Public can view what you put in FaqForge at http://www.YOUR-DOMAIN.com/faqforge/
+
+For support visit the project website at:
+    http://sourceforge.net/projects/faqforge/

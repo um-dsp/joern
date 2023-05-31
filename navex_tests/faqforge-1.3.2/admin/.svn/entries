@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="16"
+   name=""
+   committed-date="2006-06-27T23:20:45.668011Z"
+   url="https://svn.sourceforge.net/svnroot/faqforge/admin"
+   last-author="sgrayban"
+   kind="dir"
+   uuid="44278816-5d0d-0410-bbbe-869db509db7b"
+   repos="https://svn.sourceforge.net/svnroot/faqforge"
+   revision="18"/>
+<entry
+   committed-rev="16"
+   name="adminOnly.php"
+   text-time="2006-06-27T23:20:45.000000Z"
+   committed-date="2006-06-27T23:20:45.668011Z"
+   checksum="2b0eb510177fcba8b3b1c89adc6f5437"
+   last-author="sgrayban"
+   kind="file"
+   prop-time="2006-06-27T23:41:54.000000Z"/>
+<entry
+   name="appimage"
+   kind="dir"/>
+<entry
+   committed-rev="16"
+   name="admin-Login-Only.css"
+   text-time="2006-06-27T23:20:45.000000Z"
+   committed-date="2006-06-27T23:20:45.668011Z"
+   checksum="95343a501c0aa371bbabff553eaadc74"
+   last-author="sgrayban"
+   kind="file"
+   prop-time="2006-06-27T23:41:54.000000Z"/>
+<entry
+   committed-rev="16"
+   name="admin-config.php.default"
+   text-time="2006-06-27T23:20:45.000000Z"
+   committed-date="2006-06-27T23:20:45.668011Z"
+   checksum="e8a0f8430b304939e378cc052ea9085f"
+   last-author="sgrayban"
+   kind="file"
+   prop-time="2006-06-27T23:41:54.000000Z"/>
+<entry
+   committed-rev="16"
+   name="adminLogin.php"
+   text-time="2006-06-27T23:20:45.000000Z"
+   committed-date="2006-06-27T23:20:45.668011Z"
+   checksum="1df7d3a7ac954f7f24f37b653186f44c"
+   last-author="sgrayban"
+   kind="file"
+   prop-time="2006-06-27T23:41:54.000000Z"/>
+<entry
+   committed-rev="16"
+   name="adminLogOut.php"
+   text-time="2006-06-27T23:20:45.000000Z"
+   committed-date="2006-06-27T23:20:45.668011Z"
+   checksum="53a6228c551258fb6c95343c1fcfc53b"
+   last-author="sgrayban"
+   kind="file"
+   prop-time="2006-06-27T23:41:54.000000Z"/>
+<entry
+   committed-rev="16"
+   name="adminLoginForm.php"
+   text-time="2006-06-27T23:20:45.000000Z"
+   committed-date="2006-06-27T23:20:45.668011Z"
+   checksum="319cd44a89bb4bc8bbff49fe80b1613d"
+   last-author="sgrayban"
+   kind="file"
+   prop-time="2006-06-27T23:41:54.000000Z"/>
+<entry
+   committed-rev="2"
+   name="index.php"
+   text-time="2006-02-22T10:01:14.000000Z"
+   committed-date="2006-02-22T10:01:14.189501Z"
+   checksum="ff83b6b63e67224059728d930ef2c8b8"
+   last-author="sgrayban"
+   kind="file"
+   prop-time="2006-06-27T19:28:05.000000Z"/>
+</wc-entries>

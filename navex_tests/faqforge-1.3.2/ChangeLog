@@ -1,0 +1,48 @@
+$Id: ChangeLog 16 2006-06-27 23:20:45Z sgrayban $
+
+Changes by Scott Grayban <sgrayban@mandriva.org>
+
+Tue 27 June 2006
+Version 1.3.2
+**** USERS NEED TO BACKUP THEIR faqforge-config.inc & admin-config.php ****
+**** Moved admin-config.php to admin-config.php.default
+**** Moved faqforge-config.inc to faqforge-config.inc.default
+ - Up-ed version
+ - HTML should render correctly on all webbrowsers now
+ - Completely WW3 DOC typed the html
+ - Moved CHANGES to ChangeLog to comply with GPL License
+ - Updated copyright dates
+ - Update download location
+ - Somehow a . was deleted and cause a parse error in lib/pub_header.inc
+
+Version 1.3.1
+ - Fixed the "Powered by" images on the main page
+
+Wed Feb 22 2006
+ - Commited the source to SF subversion - sgrayban
+ - Commits are mirrored at http://cia.navi.cx/stats/project/faqforge
+
+Version 1.3.0
+ - New admin php login
+   * Removed the htpasswd requirement
+   * Added PHP login
+   * Requires PHP 4.3.x or better
+
+ - Better version control
+ - Made changes in the functions to control login
+ - Changes in display pages (Includes the admin sections)
+ - Added $defaultwebTitle value to faqforge-config.inc
+   * $defaultwebTitle Now Holds the default Public page Title
+     and Topic List title
+
+ - Added TODO & README file's
+ - Added GPL headers to the files
+
+Version went to 1.2.4
+ - Seperated the public view and admin view
+ - Admin section can be protected by apache's htpasswd
+ - Admin section has its own directory
+ - Public view:
+   * Page title reflects the section your in now.
+ 
+ - Added INSTALL, CHANGES, CREDTIS, LICENSE file's

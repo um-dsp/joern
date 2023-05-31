@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wc-entries
+   xmlns="svn:">
+<entry
+   committed-rev="2"
+   name=""
+   committed-date="2006-02-22T10:01:14.189501Z"
+   url="https://svn.sourceforge.net/svnroot/faqforge/admin/appimage/icons"
+   last-author="sgrayban"
+   kind="dir"
+   uuid="44278816-5d0d-0410-bbbe-869db509db7b"
+   repos="https://svn.sourceforge.net/svnroot/faqforge"
+   revision="18"/>
+<entry
+   committed-rev="2"
+   name="icon_admin.gif"
+   text-time="2006-02-22T10:01:14.000000Z"
+   committed-date="2006-02-22T10:01:14.189501Z"
+   checksum="a0d08ef9afc53b626985bfe630283ba7"
+   last-author="sgrayban"
+   kind="file"
+   prop-time="2006-06-27T19:28:05.000000Z"/>
+<entry
+   committed-rev="2"
+   name="icon_logout.gif"
+   text-time="2006-02-22T10:01:14.000000Z"
+   committed-date="2006-02-22T10:01:14.189501Z"
+   checksum="4870dbe23523ddd704778ffe7a858d19"
+   last-author="sgrayban"
+   kind="file"
+   prop-time="2006-06-27T19:28:05.000000Z"/>
+</wc-entries>
